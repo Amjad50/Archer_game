@@ -26,9 +26,9 @@ public class Ball implements DrawableModel {
     }
 
     @Override
-    public void update() {
-        velocity = velocity.add(acceleration);
-        position = position.add(velocity);
+    public void update(double delta) {
+        velocity = velocity.add(acceleration.scale(delta * 30));
+        position = position.add(velocity.scale(delta * 30));
     }
 
     @Override

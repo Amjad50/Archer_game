@@ -60,9 +60,9 @@ public class CanvasController {
         return this;
     }
 
-    private void update() {
+    private void update(double delta) {
         if (ball != null && ball.isInBound(canvas.getWidth(), canvas.getHeight()))
-            ball.update();
+            ball.update(delta);
         else
             ball = null;
     }
@@ -87,7 +87,8 @@ public class CanvasController {
             long past = 0;
 
             private void realHandle(long now) {
-                update();
+                double delta = (now - past) / 1000_000_000d;
+                update(delta);
                 clearCanvas();
                 render();
                 drawFPS(1000_000_000 / (now - past));
