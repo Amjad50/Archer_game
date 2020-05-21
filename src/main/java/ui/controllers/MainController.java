@@ -18,7 +18,7 @@ public class MainController {
     private void initialize() {
         canvasController = new CanvasController(canvas, canvasContainer);
 
-        canvasController.setFPS(20).startMainLoop();
+        canvasController.setFPS(60).startMainLoop();
     }
 }
 

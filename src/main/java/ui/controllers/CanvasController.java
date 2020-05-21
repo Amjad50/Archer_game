@@ -4,6 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
+import model.Ball;
 import utils.Vector;
 
 public class CanvasController {
@@ -12,6 +13,8 @@ public class CanvasController {
     private GraphicsContext gfx;
     private AnimationTimer mainLoop;
     private long time_delay = 0;
+
+    private Ball ball;
 
     private Vector mouseStart = new Vector(0d, 0d);
     private Vector mouseCurrent = new Vector(0d, 0d);
@@ -35,9 +38,16 @@ public class CanvasController {
             dragging = true;
             mouseStart.setValue(e.getX(), e.getY());
             mouseCurrent.setValue(e.getX(), e.getY());
+
         });
         canvas.setOnMouseDragged(e -> mouseCurrent.setValue(e.getX(), e.getY()));
-        canvas.setOnMouseReleased(e -> dragging = false);
+        canvas.setOnMouseReleased(e -> {
+            dragging = false;
+            ball = new Ball(20);
+            ball.setPosition(mouseStart);
+            ball.setVelocity(mouseCurrent.sub(mouseStart).scale(0.1));
+            ball.setAcceleration(new Vector(0, 9.8).scale(0.1));
+        });
     }
 
     public CanvasController startMainLoop() {
@@ -50,9 +60,18 @@ public class CanvasController {
         return this;
     }
 
+    private void update() {
+        if (ball != null && ball.isInBound(canvas.getWidth(), canvas.getHeight()))
+            ball.update();
+        else
+            ball = null;
+    }
+
     private void render() {
         gfx.save();
         drawLineAndAngle();
+        if (ball != null)
+            ball.render(gfx);
         gfx.restore();
     }
 
@@ -68,6 +87,7 @@ public class CanvasController {
             long past = 0;
 
             private void realHandle(long now) {
+                update();
                 clearCanvas();
                 render();
                 drawFPS(1000_000_000 / (now - past));
