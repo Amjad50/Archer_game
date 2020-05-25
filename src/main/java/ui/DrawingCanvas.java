@@ -11,9 +11,13 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 
 public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionListener {
-    long fps = 0;
-    private Vector mouseStart = new Vector(0d, 0d);
-    private Vector mouseCurrent = new Vector(0d, 0d);
+
+    private static final int MAX_BOW_DRAW = 300;
+
+    private long fps = 0;
+    private Vector mouseStart = new Vector();
+    private Vector mouseCurrent = new Vector();
+    private Vector arrowDirection = new Vector();
     private boolean dragging = false;
 
     private Arrow arrow;
@@ -30,6 +34,11 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     }
 
     private void prepareRender(double delta) {
+        if(dragging) {
+            arrowDirection = mouseStart.sub(mouseCurrent);
+            if (arrowDirection.magnitude() > MAX_BOW_DRAW)
+                arrowDirection = arrowDirection.remagnitude(MAX_BOW_DRAW);
+        }
         if (arrow != null && arrow.isInBound(getWidth(), getHeight()))
             arrow.update(delta);
     }
@@ -61,16 +70,15 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
         int bowWidth = 50, bowHeight = 120;
 
-        Vector arrowDirection = mouseStart.sub(mouseCurrent).flipY();
         // write the angle of the arrow
-        g.drawString(String.valueOf(arrowDirection.angleDeg()), 0, 30);
+        g.drawString(String.valueOf(arrowDirection.flipY().angleDeg()), 0, 30);
 
         // save the old transformation to be restored later
         AffineTransform old_transform = g.getTransform();
         // rotate the view around mouseStart with the angle of the arrowDirection
         // the bow and the arrow, would be drawn in horizontal manner
         // but when we rotate the view, they will be rotated
-        g.rotate(arrowDirection.flipY().angleRad(), mouseStart.x, mouseStart.y);
+        g.rotate(arrowDirection.angleRad(), mouseStart.x, mouseStart.y);
 
         // save the old stroke width and style
         Stroke old_stroke = g.getStroke();
@@ -85,6 +93,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         g.drawLine((int) mouseStart.x, (int) mouseStart.y - bowHeight / 2, (int) (mouseStart.x - arrowDirection.magnitude()), (int) mouseStart.y);
         g.drawLine((int) mouseStart.x, (int) mouseStart.y + bowHeight / 2, (int) (mouseStart.x - arrowDirection.magnitude()), (int) mouseStart.y);
 
+        // TODO: remove/change the offset of the arrow
         // draw the arrow
         // the length of the arrow is from the rightmost of the bow until the mouse location (plus an offset to make
         // the arrow larger a bit to exceed the bow head)
@@ -112,7 +121,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         dragging = false;
         arrow = new Arrow(50);
         arrow.setPosition(mouseStart);
-        arrow.setVelocity(mouseStart.sub(mouseCurrent).scale(0.1));
+        arrow.setVelocity(arrowDirection.scale(0.1));
         arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
     }
 
