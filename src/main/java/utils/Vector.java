@@ -10,6 +10,10 @@ public class Vector {
         this.y = y;
     }
 
+    public Vector() {
+        this(0, 0);
+    }
+
     public void setValue(double x, double y) {
         this.x = x;
         this.y = y;
@@ -40,5 +44,14 @@ public class Vector {
     public void setValue(Point point) {
         x = point.x;
         y = point.y;
+    }
+
+    public Vector scale(double v) {
+        return new Vector(x * v, y * v);
+    }
+
+    @Override
+    public String toString() {
+        return '(' + x + ", " + y + ')';
     }
 }
