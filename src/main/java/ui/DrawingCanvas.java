@@ -1,6 +1,6 @@
 package ui;
 
-import ui.model.Ball;
+import ui.model.Arrow;
 import utils.Vector;
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private Vector mouseCurrent = new Vector(0d, 0d);
     private boolean dragging = false;
 
-    private Ball ball;
+    private Arrow arrow;
 
     public DrawingCanvas() {
         addMouseListener(this);
@@ -29,10 +29,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     }
 
     private void prepareRender(double delta) {
-        if(ball != null && ball.isInBound(getWidth(), getHeight()))
-            ball.update(delta);
-        else
-            ball = null;
+        if (arrow != null && arrow.isInBound(getWidth(), getHeight()))
+            arrow.update(delta);
     }
 
     @Override
@@ -48,8 +46,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private void innerRender(Graphics2D g) {
         drawFPS(g);
         drawLineAndAngle(g);
-        if(ball != null)
-            ball.render(g);
+        if (arrow != null)
+            arrow.render(g);
     }
 
     private void drawFPS(Graphics2D g) {
@@ -73,10 +71,10 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     @Override
     public void mouseReleased(MouseEvent mouseEvent) {
         dragging = false;
-        ball = new Ball(20);
-        ball.setPosition(mouseStart);
-        ball.setVelocity(mouseCurrent.sub(mouseStart).scale(0.1));
-        ball.setAcceleration(new Vector(0, 9.8).scale(0.1));
+        arrow = new Arrow(50);
+        arrow.setPosition(mouseStart);
+        arrow.setVelocity(mouseCurrent.sub(mouseStart).scale(0.1));
+        arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
     }
 
     @Override

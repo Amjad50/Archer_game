@@ -50,8 +50,17 @@ public class Vector {
         return new Vector(x * v, y * v);
     }
 
+    public double magnitude() {
+        return Math.sqrt(x * x + y * y);
+    }
+
+    public Vector remagnitude(double magnitude) {
+        double old_mag = magnitude();
+        return this.scale(magnitude / old_mag);
+    }
+
     @Override
     public String toString() {
-        return '(' + x + ", " + y + ')';
+        return "(" + x + ", " + y + ')';
     }
 }
