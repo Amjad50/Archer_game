@@ -6,6 +6,9 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 public class Arrow implements DrawableModel {
+
+    private static final double ARROW_SHAFT_LENGTH = 20;
+
     private Vector acceleration = new Vector();
     private Vector velocity = new Vector();
     private Vector position = new Vector();
@@ -35,12 +38,17 @@ public class Arrow implements DrawableModel {
 
     @Override
     public void render(Graphics2D g) {
+        Vector arrowShaft = new Vector(-1, 1).remagnitude(ARROW_SHAFT_LENGTH);
+        Vector topArrowShaft = position.add(arrowShaft);
+        Vector bottomArrowShaft = position.add(arrowShaft.flipY());
         // save the transformation to be restored later
         AffineTransform tmp = g.getTransform();
         // rotate the canvas around the tail of the arrow
         g.rotate(velocity.angleRad(), position.x, position.y);
         // draw the arrow pointing the left of position (it will rotated based on the angle of velocity)
         g.drawLine((int)position.x, (int)position.y, (int) (position.x - length), (int)position.y);
+        g.drawLine((int)position.x, (int)position.y, (int)topArrowShaft.x, (int)topArrowShaft.y);
+        g.drawLine((int)position.x, (int)position.y, (int)bottomArrowShaft.x, (int)bottomArrowShaft.y);
         // restore the saved transformation
         g.setTransform(tmp);
     }

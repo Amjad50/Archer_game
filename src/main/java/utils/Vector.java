@@ -36,9 +36,7 @@ public class Vector {
     }
 
     public Vector flipY() {
-        y = -y;
-        // used for chaining.
-        return this;
+        return new Vector(x, -y);
     }
 
     public void setValue(Point point) {
