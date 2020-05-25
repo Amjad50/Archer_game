@@ -1,6 +1,5 @@
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
 repositories {
@@ -10,9 +9,5 @@ repositories {
 dependencies {
 }
 
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
-}
+mainClassName = "Main"
 
-mainClassName = 'MainFX'
