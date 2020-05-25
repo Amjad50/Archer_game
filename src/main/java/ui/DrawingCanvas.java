@@ -1,6 +1,7 @@
 package ui;
 
 import ui.model.Arrow;
+import utils.Helpers;
 import utils.Vector;
 
 import javax.swing.*;
@@ -12,7 +13,9 @@ import java.awt.geom.AffineTransform;
 
 public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionListener {
 
-    private static final int MAX_BOW_DRAW = 300;
+    private static final int MAX_BOW_DRAW = 100;
+    private static final int MIN_BOW_WIDTH = 10;
+    private static final int MAX_BOW_WIDTH = 60;
 
     private long fps = 0;
     private Vector mouseStart = new Vector();
@@ -34,7 +37,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     }
 
     private void prepareRender(double delta) {
-        if(dragging) {
+        if (dragging) {
             arrowDirection = mouseStart.sub(mouseCurrent);
             if (arrowDirection.magnitude() > MAX_BOW_DRAW)
                 arrowDirection = arrowDirection.remagnitude(MAX_BOW_DRAW);
@@ -68,7 +71,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         if (!dragging)
             return;
 
-        int bowWidth = 50, bowHeight = 120;
+        int bowWidth = (int) Helpers.map(arrowDirection.magnitude(), 0, MAX_BOW_DRAW, MIN_BOW_WIDTH, MAX_BOW_WIDTH),
+                bowHeight = 120;
 
         // write the angle of the arrow
         g.drawString(String.valueOf(arrowDirection.flipY().angleDeg()), 0, 30);
@@ -97,9 +101,9 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         // draw the arrow
         // the length of the arrow is from the rightmost of the bow until the mouse location (plus an offset to make
         // the arrow larger a bit to exceed the bow head)
-        Arrow arrow = new Arrow(arrowDirection.magnitude() + bowWidth + 20);
+        Arrow arrow = new Arrow(MAX_BOW_DRAW + MAX_BOW_WIDTH + 20);
         // the head is at the rightmost of the bow (plus an offset to make the arrow beyond that by a little)
-        arrow.setPosition(new Vector(mouseStart.x + bowWidth + 20, mouseStart.y));
+        arrow.setPosition(new Vector(mouseStart.x + arrow.getLength() - arrowDirection.magnitude(), mouseStart.y));
         // pointing to the right
         arrow.setVelocity(new Vector(1, 0));
 
@@ -121,7 +125,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         dragging = false;
         arrow = new Arrow(50);
         arrow.setPosition(mouseStart);
-        arrow.setVelocity(arrowDirection.scale(0.1));
+        arrow.setVelocity(arrowDirection.scale(0.3));
         arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
     }
 

@@ -30,6 +30,10 @@ public class Arrow implements DrawableModel {
         this.acceleration = v;
     }
 
+    public double getLength() {
+        return length;
+    }
+
     @Override
     public void update(double delta) {
         velocity = velocity.add(acceleration.scale(delta));

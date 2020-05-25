@@ -14,6 +14,11 @@ public class Vector {
         this(0, 0);
     }
 
+    public Vector(Point point) {
+        x = point.x;
+        y = point.y;
+    }
+
     public void setValue(double x, double y) {
         this.x = x;
         this.y = y;
