@@ -27,9 +27,10 @@ public class MainApplication extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 long now = System.nanoTime();
                 long fps =  1000_000_000 / (now - past);
-                past = System.nanoTime();
+                double delta = (now - past) / 1E9 * FPS;
                 canvas.repaint();
-                canvas.render((now - past) / 1E9 * FPS, fps);
+                canvas.render(delta, fps);
+                past = now;
             }
         });
     }
