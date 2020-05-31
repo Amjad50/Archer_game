@@ -122,11 +122,13 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mouseReleased(MouseEvent mouseEvent) {
-        dragging = false;
-        arrow = new Arrow(50);
-        arrow.setPosition(mouseStart);
-        arrow.setVelocity(arrowDirection.scale(0.3));
-        arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
+        if (dragging) {
+            dragging = false;
+            arrow = new Arrow(MAX_BOW_DRAW + MAX_BOW_WIDTH + 20);
+            arrow.setPosition(mouseStart);
+            arrow.setVelocity(arrowDirection.scale(0.3));
+            arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
+        }
     }
 
     @Override
