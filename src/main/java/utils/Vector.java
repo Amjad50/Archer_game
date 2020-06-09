@@ -44,6 +44,10 @@ public class Vector {
         return new Vector(x, -y);
     }
 
+    public Vector swipeXY() {
+        return new Vector(y, x);
+    }
+
     public void setValue(Point point) {
         x = point.x;
         y = point.y;

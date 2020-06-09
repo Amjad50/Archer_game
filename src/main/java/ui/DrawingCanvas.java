@@ -2,6 +2,7 @@ package ui;
 
 import ui.model.Arrow;
 import ui.model.BowAndArrow;
+import ui.model.Stickman;
 import utils.Vector;
 
 import javax.swing.*;
@@ -20,6 +21,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
     private Arrow arrow;
     private BowAndArrow bowAndArrow;
+    private Stickman stickman;
 
     public DrawingCanvas() {
         addMouseListener(this);
@@ -42,6 +44,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         }
         if (arrow != null && arrow.isInBound(getWidth(), getHeight()))
             arrow.update(delta);
+        if (stickman != null)
+            stickman.update(delta);
     }
 
     @Override
@@ -63,6 +67,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             bowAndArrow.render(g);
         if (arrow != null)
             arrow.render(g);
+        if (stickman != null)
+            stickman.render(g);
     }
 
     private void drawFPS(Graphics2D g) {
@@ -71,10 +77,24 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mousePressed(MouseEvent mouseEvent) {
-        dragging = true;
-        mouseStart.setValue(mouseEvent.getPoint());
-        mouseCurrent.setValue(mouseEvent.getPoint());
-        bowAndArrow = new BowAndArrow();
+        switch (mouseEvent.getButton()) {
+            case MouseEvent.BUTTON1: {
+                dragging = true;
+                mouseStart.setValue(mouseEvent.getPoint());
+                mouseCurrent.setValue(mouseEvent.getPoint());
+                bowAndArrow = new BowAndArrow();
+                break;
+            }
+            case MouseEvent.BUTTON2: {
+                // ignored
+                break;
+            }
+            case MouseEvent.BUTTON3: {
+                stickman = new Stickman(200);
+                stickman.setGroundPosition(new Vector(mouseEvent.getPoint()));
+                break;
+            }
+        }
     }
 
     @Override
