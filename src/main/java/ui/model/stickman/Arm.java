@@ -14,7 +14,6 @@ public class Arm implements DrawableModel {
         if (segments.size() == 0)
             return;
 
-        System.out.println(segments.size());
         ArmLegSegment last = segments.get(segments.size() - 1);
 
         last.follow(target);
