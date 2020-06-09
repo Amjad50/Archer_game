@@ -2,7 +2,7 @@ package ui;
 
 import ui.model.Arrow;
 import ui.model.BowAndArrow;
-import ui.model.Stickman;
+import ui.model.stickman.Stickman;
 import utils.Vector;
 
 import javax.swing.*;

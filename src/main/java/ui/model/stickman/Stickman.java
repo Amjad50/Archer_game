@@ -1,5 +1,7 @@
-package ui.model;
+package ui.model.stickman;
 
+import ui.model.DrawableModel;
+import utils.Pair;
 import utils.Vector;
 
 import java.awt.*;
@@ -23,12 +25,16 @@ public class Stickman implements DrawableModel {
     private Vector leftLeg = new Vector();
     private Vector rightLeg = new Vector();
     private Vector shoulderCenter = new Vector();
-    private Vector leftArm = new Vector();
-    private Vector rightArm = new Vector();
+    private Arm leftArm = new Arm();
+    private Arm rightArm = new Arm();
 
 
     public Stickman(double height) {
         this.bodyHeight = height;
+        rightArm.addArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
+        rightArm.addArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
+        leftArm.addArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
+        leftArm.addArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
     }
 
     // FIXME: remove all these hardcoded values
@@ -49,8 +55,12 @@ public class Stickman implements DrawableModel {
 
         shoulderCenter = wist.sub(shouldersWistOffset);
 
-        rightArm = shoulderCenter.add(armShoulderOffset);
-        leftArm = shoulderCenter.sub(armShoulderOffset);
+        rightArm.setBase(shoulderCenter);
+        leftArm.setBase(shoulderCenter);
+
+        // TODO: use a stored position of the location of the hand
+        rightArm.follow(shoulderCenter.add(armShoulderOffset));
+        leftArm.follow(shoulderCenter.sub(armShoulderOffset));
     }
 
     @Override
@@ -67,8 +77,8 @@ public class Stickman implements DrawableModel {
         g.drawOval((int) (shoulderCenter.x - headRadius), (int) (shoulderCenter.y - headRadius * 2),
                 (int) headRadius * 2, (int) headRadius * 2);
 
-        g.drawLine((int) shoulderCenter.x, (int) shoulderCenter.y, (int) rightArm.x, (int) rightArm.y);
-        g.drawLine((int) shoulderCenter.x, (int) shoulderCenter.y, (int) leftArm.x, (int) leftArm.y);
+        rightArm.render(g);
+        leftArm.render(g);
 
         g.setStroke(old_stroke);
     }
@@ -89,5 +99,9 @@ public class Stickman implements DrawableModel {
 
     public void setRightHandPosition(Vector v) {
         // FIXME: implement
+    }
+
+    public Pair<Vector> getHandsPosition() {
+        return new Pair<>(rightArm.getTipPosition(), leftArm.getTipPosition());
     }
 }

@@ -66,6 +66,10 @@ public class Vector {
         return this.scale(magnitude / old_mag);
     }
 
+    public Vector copy() {
+        return new Vector(x, y);
+    }
+
     @Override
     public String toString() {
         return "(" + x + ", " + y + ')';
