@@ -2,6 +2,7 @@ package ui;
 
 import ui.model.Arrow;
 import ui.model.BowAndArrow;
+import ui.model.stickman.Arm;
 import ui.model.stickman.Stickman;
 import utils.Vector;
 
@@ -22,6 +23,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private Arrow arrow;
     private BowAndArrow bowAndArrow;
     private Stickman stickman;
+    private Arm arm = new Arm();
 
     public DrawingCanvas() {
         addMouseListener(this);
@@ -46,6 +48,9 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             arrow.update(delta);
         if (stickman != null)
             stickman.update(delta);
+        if(arm != null) {
+            arm.setBase(new Vector(getWidth() / 2., getHeight()));
+        }
     }
 
     @Override
@@ -70,6 +75,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             arrow.render(g);
         if (stickman != null)
             stickman.render(g);
+        if(arm != null)
+            arm.render(g);
     }
 
     private void drawFPS(Graphics2D g) {
@@ -87,7 +94,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 break;
             }
             case MouseEvent.BUTTON2: {
-                // ignored
+                arm.addArm(100);
                 break;
             }
             case MouseEvent.BUTTON3: {
@@ -115,6 +122,10 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
         mouseCurrent.setValue(mouseEvent.getPoint());
+
+        // dragging is not considered movement, so we need to update it in two places :(
+        if(arm != null)
+            arm.follow(new Vector(mouseEvent.getPoint()));
     }
 
     @Override
@@ -131,5 +142,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
+        if(arm != null)
+            arm.follow(new Vector(mouseEvent.getPoint()));
     }
 }
