@@ -10,8 +10,8 @@ public class BowAndArrow implements DrawableModel {
 
     private Bow bow;
     private Arrow arrow;
-    private Vector direction;
-    private Vector startPosition;
+    private Vector direction = new Vector();
+    private Vector startPosition = new Vector();
 
     public BowAndArrow() {
         this(DEFAULT_ARROW_LENGTH);
