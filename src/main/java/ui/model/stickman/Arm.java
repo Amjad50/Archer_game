@@ -16,12 +16,14 @@ public class Arm implements DrawableModel {
 
         ArmLegSegment last = segments.get(segments.size() - 1);
 
+        // Follow from the tip to the end of the arm
         last.follow(target);
         if (segments.size() > 1)
             for (int i = segments.size() - 2; i >= 0; i--) {
                 segments.get(i).follow(segments.get(i + 1).getStart());
             }
 
+        // Put the arm at the base (just moving)
         segments.get(0).setStart(base).updateEnd();
         if (segments.size() > 1)
             for (int i = 1; i < segments.size(); i++) {
