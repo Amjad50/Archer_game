@@ -29,7 +29,6 @@ public class MainApplication extends JFrame {
                 long now = System.nanoTime();
                 long fps =  1000_000_000 / (now - past);
                 double delta = (now - past) / 1E9 * FPS_60;
-                canvas.repaint();
                 canvas.render(delta, fps);
                 past = now;
             }
