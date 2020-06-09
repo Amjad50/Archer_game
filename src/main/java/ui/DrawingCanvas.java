@@ -74,6 +74,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         dragging = true;
         mouseStart.setValue(mouseEvent.getPoint());
         mouseCurrent.setValue(mouseEvent.getPoint());
+        bowAndArrow = new BowAndArrow();
     }
 
     @Override
