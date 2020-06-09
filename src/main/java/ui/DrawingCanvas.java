@@ -94,7 +94,10 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 break;
             }
             case MouseEvent.BUTTON2: {
-                arm.addArm(100);
+                int section_size = 5;
+                for (int i = 0; i < 100 / section_size; i++) {
+                    arm.addArm(section_size);
+                }
                 break;
             }
             case MouseEvent.BUTTON3: {
