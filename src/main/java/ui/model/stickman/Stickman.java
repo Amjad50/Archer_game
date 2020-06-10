@@ -94,11 +94,11 @@ public class Stickman implements DrawableModel {
     }
 
     public void setLeftHandPosition(Vector v) {
-        // FIXME: implement
+        leftArm.follow(v);
     }
 
     public void setRightHandPosition(Vector v) {
-        // FIXME: implement
+        rightArm.follow(v);
     }
 
     public Pair<Vector> getHandsPosition() {
