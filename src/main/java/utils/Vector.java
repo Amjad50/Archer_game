@@ -63,6 +63,8 @@ public class Vector {
 
     public Vector remagnitude(double magnitude) {
         double old_mag = magnitude();
+        if(old_mag == 0)
+            return this.copy();
         return this.scale(magnitude / old_mag);
     }
 
