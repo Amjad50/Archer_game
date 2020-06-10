@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Arm implements DrawableModel {
-    private ArrayList<ArmLegSegment> segments = new ArrayList<>();
+    protected ArrayList<ArmLegSegment> segments = new ArrayList<>();
     private Vector base = new Vector();
 
     public void follow(Vector target) {

@@ -25,16 +25,14 @@ public class Stickman implements DrawableModel {
     private Vector leftLeg = new Vector();
     private Vector rightLeg = new Vector();
     private Vector shoulderCenter = new Vector();
-    private Arm leftArm = new Arm();
-    private Arm rightArm = new Arm();
+    private HumanArm leftArm;
+    private HumanArm rightArm;
 
 
     public Stickman(double height) {
         this.bodyHeight = height;
-        rightArm.addArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
-        rightArm.addArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
-        leftArm.addArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
-        leftArm.addArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
+        rightArm = new HumanArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
+        leftArm = new HumanArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
 
         // build the body for the first time
         update(1);
