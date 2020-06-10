@@ -6,7 +6,8 @@ import java.awt.*;
 
 public class BowAndArrow implements DrawableModel {
 
-    private static final double DEFAULT_ARROW_LENGTH = 160;
+    public static final double DEFAULT_ARROW_LENGTH = 130;
+    public static double DEFAULT_BOW_HEIGHT = Bow.DEFAULT_HEIGHT;
 
     private Bow bow;
     private Arrow arrow;
@@ -14,17 +15,18 @@ public class BowAndArrow implements DrawableModel {
     private Vector startPosition = new Vector();
 
     public BowAndArrow() {
-        this(DEFAULT_ARROW_LENGTH);
+        this(DEFAULT_ARROW_LENGTH, Bow.DEFAULT_HEIGHT);
     }
 
-    public BowAndArrow(double arrowLength) {
+    public BowAndArrow(double arrowLength, double bowHeight) {
         arrow = new Arrow(arrowLength);
-        bow = new Bow();
+        bow = new Bow(bowHeight);
+        bow.setMaxWholeWidth(arrowLength - 20);
     }
 
     @Override
     public void update(double delta) {
-
+        bow.update(delta);
     }
 
     @Override

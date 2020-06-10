@@ -11,20 +11,33 @@ public class Bow implements DrawableModel {
     private static final int MAX_BOW_DRAW = 100;
     private static final int MIN_BOW_WIDTH = 10;
     private static final int MAX_BOW_WIDTH = 40;
-    private static final int DEFAULT_HEIGHT = 120;
+    static final int DEFAULT_HEIGHT = 120;
+
+    private double height;
+    private double width;
+    private double maxWholeWidth; // THe maximum possible width of the bow
+    private double maxDraw;
 
     private Vector direction = new Vector();
     private Vector startPosition = new Vector();
 
+    public Bow() {
+        this(DEFAULT_HEIGHT);
+    }
+
+    public Bow(double height) {
+        this.height = height;
+        this.maxDraw = MAX_BOW_DRAW;
+        this.maxWholeWidth = maxDraw + MAX_BOW_WIDTH;
+    }
 
     @Override
     public void update(double delta) {
+        width = Helpers.map(this.direction.magnitude(), 0, maxDraw, MIN_BOW_WIDTH, MAX_BOW_WIDTH);
     }
 
     @Override
     public void render(Graphics2D g) {
-        int bowWidth = (int) Helpers.map(this.direction.magnitude(), 0, MAX_BOW_DRAW, MIN_BOW_WIDTH, MAX_BOW_WIDTH),
-                bowHeight = DEFAULT_HEIGHT;
         // save the old transformation to be restored later
         AffineTransform old_transform = g.getTransform();
         // rotate the view around mouseStart with the angle of the arrowDirection
@@ -37,14 +50,14 @@ public class Bow implements DrawableModel {
         // set the stroke to 5 to draw the bow material
         g.setStroke(new BasicStroke(5));
         // draw an arc half a circle from the top of the circle to the bottom, covering the right side of the circle
-        g.drawArc((int) (startPosition.x - bowWidth), (int) startPosition.y - bowHeight / 2, bowWidth * 2, bowHeight, 90, -180);
+        g.drawArc((int) (startPosition.x - width), (int) (startPosition.y - height / 2), (int) width * 2, (int) height, 90, -180);
         // restore stroke
         g.setStroke(old_stroke);
 
 
         // draw the two lines, from the top and bottom of the bow to the current mouse location
-        g.drawLine((int) startPosition.x, (int) startPosition.y - bowHeight / 2, (int) (startPosition.x - direction.magnitude()), (int) startPosition.y);
-        g.drawLine((int) startPosition.x, (int) startPosition.y + bowHeight / 2, (int) (startPosition.x - direction.magnitude()), (int) startPosition.y);
+        g.drawLine((int) startPosition.x, (int) (startPosition.y - height / 2), (int) (startPosition.x - direction.magnitude()), (int) startPosition.y);
+        g.drawLine((int) startPosition.x, (int) (startPosition.y + height / 2), (int) (startPosition.x - direction.magnitude()), (int) startPosition.y);
 
         g.setTransform(old_transform);
     }
@@ -55,8 +68,8 @@ public class Bow implements DrawableModel {
     }
 
     public Vector setDirectionNormalized(Vector direction) {
-        if (direction.magnitude() > MAX_BOW_DRAW)
-            this.direction = direction.remagnitude(MAX_BOW_DRAW);
+        if (direction.magnitude() > maxDraw)
+            this.direction = direction.remagnitude(maxDraw);
         else
             this.direction = direction;
 
@@ -65,5 +78,10 @@ public class Bow implements DrawableModel {
 
     public void setStartPosition(Vector startPosition) {
         this.startPosition = startPosition;
+    }
+
+    public void setMaxWholeWidth(double maxWholeWidth) {
+        this.maxWholeWidth = maxWholeWidth;
+        this.maxDraw = maxWholeWidth - MAX_BOW_WIDTH;
     }
 }

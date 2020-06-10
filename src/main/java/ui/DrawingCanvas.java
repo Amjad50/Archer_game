@@ -43,6 +43,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         if (bowAndArrow != null) {
             bowAndArrow.setDirectionNormalized(arrowDirection);
             bowAndArrow.setStartPosition(mouseStart);
+            bowAndArrow.update(delta);
         }
         if (arrow != null && arrow.isInBound(getWidth(), getHeight()))
             arrow.update(delta);
@@ -90,7 +91,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 dragging = true;
                 mouseStart.setValue(mouseEvent.getPoint());
                 mouseCurrent.setValue(mouseEvent.getPoint());
-                bowAndArrow = new BowAndArrow();
+                // this is to match 9/12 of the width of the stick man
+                bowAndArrow = new BowAndArrow(BowAndArrow.DEFAULT_ARROW_LENGTH, 200. * 9 / 12);
                 break;
             }
             case MouseEvent.BUTTON2: {
