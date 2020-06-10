@@ -47,9 +47,17 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         }
         if (arrow != null && arrow.isInBound(getWidth(), getHeight()))
             arrow.update(delta);
-        if (stickman != null)
+
+        if (stickman != null) {
+            if(bowAndArrow != null) {
+                stickman.setRightHandPosition(bowAndArrow.getBowEndPosition());
+                stickman.setLeftHandPosition(mouseCurrent);
+            }
+
             stickman.update(delta);
-        if(arm != null) {
+        }
+
+        if (arm != null) {
             arm.setBase(new Vector(getWidth() / 2., getHeight()));
         }
     }
@@ -76,7 +84,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             arrow.render(g);
         if (stickman != null)
             stickman.render(g);
-        if(arm != null)
+        if (arm != null)
             arm.render(g);
     }
 
@@ -129,7 +137,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         mouseCurrent.setValue(mouseEvent.getPoint());
 
         // dragging is not considered movement, so we need to update it in two places :(
-        if(arm != null)
+        if (arm != null)
             arm.follow(new Vector(mouseEvent.getPoint()));
     }
 
@@ -147,7 +155,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
-        if(arm != null)
-            arm.follow(new Vector(mouseEvent.getPoint()));
+        Vector pos = new Vector(mouseEvent.getPoint());
+        if (arm != null)
+            arm.follow(pos);
     }
 }

@@ -35,6 +35,9 @@ public class Stickman implements DrawableModel {
         rightArm.addArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
         leftArm.addArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
         leftArm.addArm(bodyHeight / BODY_HEIGHT * ARM_LEG_SECTION_LENGTH);
+
+        // build the body for the first time
+        update(1);
     }
 
     // FIXME: remove all these hardcoded values
@@ -57,10 +60,6 @@ public class Stickman implements DrawableModel {
 
         rightArm.setBase(shoulderCenter);
         leftArm.setBase(shoulderCenter);
-
-        // TODO: use a stored position of the location of the hand
-        rightArm.follow(shoulderCenter.add(armShoulderOffset));
-        leftArm.follow(shoulderCenter.sub(armShoulderOffset));
     }
 
     @Override

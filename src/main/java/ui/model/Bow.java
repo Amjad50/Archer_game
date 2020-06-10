@@ -31,9 +31,13 @@ public class Bow implements DrawableModel {
         this.maxWholeWidth = maxDraw + MAX_BOW_WIDTH;
     }
 
+    private void updateWidth() {
+        width = Helpers.map(this.direction.magnitude(), 0, maxDraw, MIN_BOW_WIDTH, MAX_BOW_WIDTH);
+    }
+
     @Override
     public void update(double delta) {
-        width = Helpers.map(this.direction.magnitude(), 0, maxDraw, MIN_BOW_WIDTH, MAX_BOW_WIDTH);
+        updateWidth();
     }
 
     @Override
@@ -83,5 +87,10 @@ public class Bow implements DrawableModel {
     public void setMaxWholeWidth(double maxWholeWidth) {
         this.maxWholeWidth = maxWholeWidth;
         this.maxDraw = maxWholeWidth - MAX_BOW_WIDTH;
+    }
+
+    public Vector getEndPosition() {
+        updateWidth();
+        return startPosition.add(direction.remagnitude(width));
     }
 }

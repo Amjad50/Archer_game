@@ -54,6 +54,10 @@ public class BowAndArrow implements DrawableModel {
         bow.setStartPosition(startPosition);
     }
 
+    public Vector getBowEndPosition() {
+        return bow.getEndPosition();
+    }
+
     public double getArrowLength() {
         return arrow.getLength();
     }
