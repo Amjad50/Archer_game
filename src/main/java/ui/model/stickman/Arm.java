@@ -52,7 +52,7 @@ public class Arm implements DrawableModel {
     }
 
     @Override
-    public boolean isInBound(double w, double h) {
+    public boolean isInBound(Vector start, double w, double h) {
         return false;
     }
 

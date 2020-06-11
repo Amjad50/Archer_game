@@ -2,14 +2,13 @@ package ui;
 
 import ui.model.Archer;
 import ui.model.Arrow;
-import ui.model.BowAndArrow;
 import ui.model.stickman.Arm;
-import ui.model.stickman.Stickman;
 import utils.Vector;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
 
@@ -21,9 +20,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
     private int xOffset = 0;
 
-    private Arrow arrow;
-    private BowAndArrow bowAndArrow;
-    private Stickman stickman;
+    private ArrayList<Arrow> arrows = new ArrayList<>();
     private Archer archer;
     private Arm arm = new Arm();
 
@@ -43,21 +40,10 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         if (dragging) {
             arrowDirection = mouseStart.sub(mouseCurrent);
         }
-        if (bowAndArrow != null) {
-//            bowAndArrow.setDirectionNormalized(arrowDirection);
-//            bowAndArrow.setStartPosition(mouseStart);
-//            bowAndArrow.update(delta);
-        }
-        if (arrow != null && arrow.isInBound(getWidth(), getHeight()))
-            arrow.update(delta);
 
-        if (stickman != null) {
-            if (bowAndArrow != null) {
-                stickman.setRightHandPosition(bowAndArrow.getBowEndPosition());
-                stickman.setLeftHandPosition(mouseCurrent);
-            }
-
-            stickman.update(delta);
+        for (Arrow arrow : arrows) {
+            if(!arrow.isInBound(new Vector(-10000, getHeight()), 20000, 1000))
+                arrow.update(delta);
         }
 
         if (arm != null) {
@@ -89,12 +75,10 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         // Scroll all objects
         g.translate(xOffset, 0);
 
-        if (bowAndArrow != null)
-            bowAndArrow.render(g);
-        if (arrow != null)
+        for (Arrow arrow : arrows) {
             arrow.render(g);
-        if (stickman != null)
-            stickman.render(g);
+        }
+
         if (arm != null)
             arm.render(g);
         if (archer != null)
@@ -115,21 +99,15 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 mouseCurrent.setValue(mouseEvent.getPoint());
                 mouseCurrent.x -= xOffset;
                 // this is to match 9/12 of the width of the stick man
-                bowAndArrow = new BowAndArrow(BowAndArrow.DEFAULT_ARROW_LENGTH, 200. * 9 / 12);
                 break;
             }
             case MouseEvent.BUTTON2: {
-//                int section_size = 5;
-//                for (int i = 0; i < 100 / section_size; i++) {
-//                    arm.addArm(section_size);
-//                }
                 archer = new Archer(200);
                 archer.setGroundPosition(new Vector(mouseEvent.getPoint()).sub(new Vector(xOffset, 0)));
                 break;
             }
             case MouseEvent.BUTTON3: {
-                stickman = new Stickman(200);
-                stickman.setGroundPosition(new Vector(mouseEvent.getPoint()).sub(new Vector(xOffset, 0)));
+                // not used
                 break;
             }
         }
@@ -139,17 +117,14 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     public void mouseReleased(MouseEvent mouseEvent) {
         if (dragging) {
             dragging = false;
-            arrow = new Arrow(bowAndArrow.getArrowLength());
-            // FIXME: position of the arrow should come from the archer
-            arrow.setPosition(mouseStart);
-            arrow.setVelocity(arrowDirection.scale(0.3));
-            arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
+            if (archer != null) {
+                Arrow arrow = archer.releaseArrow();
+                arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
 
-            // remove the bow and arrow preview
-            bowAndArrow = null;
+                arrows.add(arrow);
 
-            if (archer != null)
                 archer.resetBowAndArrow();
+            }
         }
     }
 

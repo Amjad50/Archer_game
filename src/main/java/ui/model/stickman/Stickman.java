@@ -83,7 +83,7 @@ public class Stickman implements DrawableModel {
 
     // TODO: implement properly
     @Override
-    public boolean isInBound(double w, double h) {
+    public boolean isInBound(Vector start, double w, double h) {
         return false;
     }
 

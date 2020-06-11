@@ -49,4 +49,12 @@ public class Archer extends Stickman {
         Vector end = bowAndArrow.getYarnEndPosition();
         g.fillOval((int)end.x - 5, (int)end.y - 5, 10, 10);
     }
+
+    public Arrow releaseArrow() {
+        Arrow arrow = new Arrow(bowAndArrow.getArrowLength());
+        arrow.setPosition(bowAndArrow.getYarnEndPosition());
+        arrow.setVelocity(bowAndArrow.getDirection());
+
+        return arrow;
+    }
 }

@@ -57,9 +57,8 @@ public class Arrow implements DrawableModel {
         g.setTransform(tmp);
     }
 
-
     @Override
-    public boolean isInBound(double w, double h) {
-        return position.x <= w && position.y <= h && position.x >= 0 && position.y >= 0;
+    public boolean isInBound(Vector start, double w, double h) {
+        return position.x <= start.x + w && position.y <= start.y + h && position.x >= start.x && position.y >= start.y;
     }
 }

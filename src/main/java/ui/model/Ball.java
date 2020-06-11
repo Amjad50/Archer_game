@@ -37,9 +37,8 @@ public class Ball implements DrawableModel {
         g.fillOval((int)(position.x - radius), (int)(position.y - radius), (int)radius * 2, (int)radius * 2);
     }
 
-
     @Override
-    public boolean isInBound(double w, double h) {
-        return position.x <= w && position.y <= h && position.x >= 0 && position.y >= 0;
+    public boolean isInBound(Vector start, double w, double h) {
+        return position.x <= start.x + w && position.y <= start.y + h && position.x >= start.x && position.y >= start.y;
     }
 }

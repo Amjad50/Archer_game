@@ -41,7 +41,7 @@ public class BowAndArrow implements DrawableModel {
     }
 
     @Override
-    public boolean isInBound(double w, double h) {
+    public boolean isInBound(Vector start, double w, double h) {
         return false;
     }
 
@@ -64,5 +64,9 @@ public class BowAndArrow implements DrawableModel {
 
     public double getArrowLength() {
         return arrow.getLength();
+    }
+
+    public Vector getDirection() {
+        return direction;
     }
 }
