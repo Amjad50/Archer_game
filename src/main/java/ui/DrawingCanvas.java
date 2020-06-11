@@ -9,17 +9,17 @@ import utils.Vector;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 
-public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionListener {
+public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
 
     private long fps = 0;
     private Vector mouseStart = new Vector();
     private Vector mouseCurrent = new Vector();
     private Vector arrowDirection = new Vector();
     private boolean dragging = false;
+
+    private int xOffset = 0;
 
     private Arrow arrow;
     private BowAndArrow bowAndArrow;
@@ -30,6 +30,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     public DrawingCanvas() {
         addMouseListener(this);
         addMouseMotionListener(this);
+        addMouseWheelListener(this);
     }
 
     public void render(double delta, long fps) {
@@ -85,6 +86,9 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         // write the angle of the arrow
         g.drawString(String.valueOf(arrowDirection.flipY().angleDeg()), 0, 30);
 
+        // Scroll all objects
+        g.translate(xOffset, 0);
+
         if (bowAndArrow != null)
             bowAndArrow.render(g);
         if (arrow != null)
@@ -107,7 +111,9 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             case MouseEvent.BUTTON1: {
                 dragging = true;
                 mouseStart.setValue(mouseEvent.getPoint());
+                mouseStart.x -= xOffset;
                 mouseCurrent.setValue(mouseEvent.getPoint());
+                mouseCurrent.x -= xOffset;
                 // this is to match 9/12 of the width of the stick man
                 bowAndArrow = new BowAndArrow(BowAndArrow.DEFAULT_ARROW_LENGTH, 200. * 9 / 12);
                 break;
@@ -118,12 +124,12 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 //                    arm.addArm(section_size);
 //                }
                 archer = new Archer(200);
-                archer.setGroundPosition(new Vector(mouseEvent.getPoint()));
+                archer.setGroundPosition(new Vector(mouseEvent.getPoint()).sub(new Vector(xOffset, 0)));
                 break;
             }
             case MouseEvent.BUTTON3: {
                 stickman = new Stickman(200);
-                stickman.setGroundPosition(new Vector(mouseEvent.getPoint()));
+                stickman.setGroundPosition(new Vector(mouseEvent.getPoint()).sub(new Vector(xOffset, 0)));
                 break;
             }
         }
@@ -134,6 +140,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         if (dragging) {
             dragging = false;
             arrow = new Arrow(bowAndArrow.getArrowLength());
+            // FIXME: position of the arrow should come from the archer
             arrow.setPosition(mouseStart);
             arrow.setVelocity(arrowDirection.scale(0.3));
             arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
@@ -149,10 +156,11 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
         mouseCurrent.setValue(mouseEvent.getPoint());
+        mouseCurrent.x -= xOffset;
 
         // dragging is not considered movement, so we need to update it in two places :(
         if (arm != null)
-            arm.follow(new Vector(mouseEvent.getPoint()));
+            arm.follow(mouseCurrent);
     }
 
     @Override
@@ -170,7 +178,14 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
         Vector pos = new Vector(mouseEvent.getPoint());
+        pos.x -= xOffset;
         if (arm != null)
             arm.follow(pos);
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
+        int units = mouseWheelEvent.getUnitsToScroll();
+        xOffset += units;
     }
 }
