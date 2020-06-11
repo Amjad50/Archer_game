@@ -161,6 +161,6 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     @Override
     public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
         int units = mouseWheelEvent.getUnitsToScroll();
-        xOffset += units;
+        xOffset += units * 10;
     }
 }
