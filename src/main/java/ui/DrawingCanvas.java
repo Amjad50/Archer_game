@@ -19,6 +19,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private boolean dragging = false;
 
     private Vector offset = new Vector();
+    private double groundHeight;
 
     private ArrayList<Arrow> arrows = new ArrayList<>();
     private Archer archer;
@@ -28,6 +29,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
+
+        groundHeight = 100;
     }
 
     public void render(double delta, long fps) {
@@ -43,18 +46,18 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
         Arrow last = null;
         for (Arrow arrow : arrows) {
-            if(!arrow.isInBound(new Vector(-10000, getHeight()), 20000, 1000)) {
+            if (!arrow.isInBound(new Vector(-10000, getHeight() - groundHeight), 20000, 1000)) {
                 arrow.update(delta);
                 last = arrow;
             }
         }
         // follow the last arrow
-        if(last != null ) {
+        if (last != null) {
             offset.x = -(last.getPosition().x - getWidth() / 2.);
             offset.y = -(last.getPosition().y - getHeight() / 2.);
 
             // the ground should not move up
-            if(offset.y < 0)
+            if (offset.y < 0)
                 offset.y = 0;
         }
 
@@ -87,6 +90,9 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
         // Scroll all objects
         g.translate(offset.x, offset.y);
+
+        // ground
+        g.drawLine(-10000, (int) (getHeight() - groundHeight), 10000, (int) (getHeight() - groundHeight));
 
         for (Arrow arrow : arrows) {
             arrow.render(g);
