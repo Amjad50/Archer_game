@@ -41,14 +41,22 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             arrowDirection = mouseStart.sub(mouseCurrent);
         }
 
+        Arrow last = null;
         for (Arrow arrow : arrows) {
-            if(!arrow.isInBound(new Vector(-10000, getHeight()), 20000, 1000))
+            if(!arrow.isInBound(new Vector(-10000, getHeight()), 20000, 1000)) {
                 arrow.update(delta);
+                last = arrow;
+            }
+        }
+        // follow the last arrow
+        if(last != null ) {
+            xOffset = (int) -(last.getPosition().x - getWidth() / 2);
         }
 
         if (arm != null) {
             arm.setBase(new Vector(getWidth() / 2., getHeight()));
         }
+
         if (archer != null) {
             archer.update(delta);
             if (dragging)
@@ -77,6 +85,19 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
         for (Arrow arrow : arrows) {
             arrow.render(g);
+        }
+
+        // color the last arrow as green
+        if (arrows.size() > 0) {
+            Stroke old_stroke = g.getStroke();
+            Paint old_paint = g.getPaint();
+
+            g.setPaint(Color.GREEN);
+            g.setStroke(new BasicStroke(5));
+            arrows.get(arrows.size() - 1).render(g);
+
+            g.setStroke(old_stroke);
+            g.setPaint(old_paint);
         }
 
         if (arm != null)

@@ -61,4 +61,8 @@ public class Arrow implements DrawableModel {
     public boolean isInBound(Vector start, double w, double h) {
         return position.x <= start.x + w && position.y <= start.y + h && position.x >= start.x && position.y >= start.y;
     }
+
+    public Vector getPosition() {
+        return position;
+    }
 }

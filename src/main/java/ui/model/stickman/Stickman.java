@@ -102,4 +102,8 @@ public class Stickman implements DrawableModel {
     public Pair<Vector> getHandsPosition() {
         return new Pair<>(rightArm.getTipPosition(), leftArm.getTipPosition());
     }
+
+    public Vector getGroundPosition() {
+        return groundPosition;
+    }
 }
