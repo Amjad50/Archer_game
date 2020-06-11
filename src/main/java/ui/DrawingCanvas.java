@@ -18,7 +18,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private Vector arrowDirection = new Vector();
     private boolean dragging = false;
 
-    private int xOffset = 0;
+    private Vector offset = new Vector();
 
     private ArrayList<Arrow> arrows = new ArrayList<>();
     private Archer archer;
@@ -50,7 +50,12 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         }
         // follow the last arrow
         if(last != null ) {
-            xOffset = (int) -(last.getPosition().x - getWidth() / 2);
+            offset.x = -(last.getPosition().x - getWidth() / 2.);
+            offset.y = -(last.getPosition().y - getHeight() / 2.);
+
+            // the ground should not move up
+            if(offset.y < 0)
+                offset.y = 0;
         }
 
         if (arm != null) {
@@ -81,7 +86,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         g.drawString(String.valueOf(arrowDirection.flipY().angleDeg()), 0, 30);
 
         // Scroll all objects
-        g.translate(xOffset, 0);
+        g.translate(offset.x, offset.y);
 
         for (Arrow arrow : arrows) {
             arrow.render(g);
@@ -116,15 +121,15 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             case MouseEvent.BUTTON1: {
                 dragging = true;
                 mouseStart.setValue(mouseEvent.getPoint());
-                mouseStart.x -= xOffset;
+                mouseStart = mouseStart.sub(offset);
+
                 mouseCurrent.setValue(mouseEvent.getPoint());
-                mouseCurrent.x -= xOffset;
-                // this is to match 9/12 of the width of the stick man
+                mouseCurrent = mouseCurrent.sub(offset);
                 break;
             }
             case MouseEvent.BUTTON2: {
                 archer = new Archer(200);
-                archer.setGroundPosition(new Vector(mouseEvent.getPoint()).sub(new Vector(xOffset, 0)));
+                archer.setGroundPosition(new Vector(mouseEvent.getPoint()).sub(offset));
                 break;
             }
             case MouseEvent.BUTTON3: {
@@ -152,7 +157,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
         mouseCurrent.setValue(mouseEvent.getPoint());
-        mouseCurrent.x -= xOffset;
+        mouseCurrent = mouseCurrent.sub(offset);
 
         // dragging is not considered movement, so we need to update it in two places :(
         if (arm != null)
@@ -173,8 +178,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
-        Vector pos = new Vector(mouseEvent.getPoint());
-        pos.x -= xOffset;
+        Vector pos = new Vector(mouseEvent.getPoint()).sub(offset);
         if (arm != null)
             arm.follow(pos);
     }
@@ -182,6 +186,6 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     @Override
     public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
         int units = mouseWheelEvent.getUnitsToScroll();
-        xOffset += units * 10;
+        offset.x += units * 10;
     }
 }
