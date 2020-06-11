@@ -1,5 +1,6 @@
 package ui;
 
+import ui.model.Archer;
 import ui.model.Arrow;
 import ui.model.BowAndArrow;
 import ui.model.stickman.Arm;
@@ -23,6 +24,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private Arrow arrow;
     private BowAndArrow bowAndArrow;
     private Stickman stickman;
+    private Archer archer;
     private Arm arm = new Arm();
 
     public DrawingCanvas() {
@@ -41,15 +43,15 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             arrowDirection = mouseStart.sub(mouseCurrent);
         }
         if (bowAndArrow != null) {
-            bowAndArrow.setDirectionNormalized(arrowDirection);
-            bowAndArrow.setStartPosition(mouseStart);
-            bowAndArrow.update(delta);
+//            bowAndArrow.setDirectionNormalized(arrowDirection);
+//            bowAndArrow.setStartPosition(mouseStart);
+//            bowAndArrow.update(delta);
         }
         if (arrow != null && arrow.isInBound(getWidth(), getHeight()))
             arrow.update(delta);
 
         if (stickman != null) {
-            if(bowAndArrow != null) {
+            if (bowAndArrow != null) {
                 stickman.setRightHandPosition(bowAndArrow.getBowEndPosition());
                 stickman.setLeftHandPosition(mouseCurrent);
             }
@@ -59,6 +61,11 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
         if (arm != null) {
             arm.setBase(new Vector(getWidth() / 2., getHeight()));
+        }
+        if (archer != null) {
+            archer.update(delta);
+            if (dragging)
+                archer.draw(arrowDirection);
         }
     }
 
@@ -86,6 +93,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             stickman.render(g);
         if (arm != null)
             arm.render(g);
+        if (archer != null)
+            archer.render(g);
     }
 
     private void drawFPS(Graphics2D g) {
@@ -104,10 +113,12 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 break;
             }
             case MouseEvent.BUTTON2: {
-                int section_size = 5;
-                for (int i = 0; i < 100 / section_size; i++) {
-                    arm.addArm(section_size);
-                }
+//                int section_size = 5;
+//                for (int i = 0; i < 100 / section_size; i++) {
+//                    arm.addArm(section_size);
+//                }
+                archer = new Archer(200);
+                archer.setGroundPosition(new Vector(mouseEvent.getPoint()));
                 break;
             }
             case MouseEvent.BUTTON3: {
@@ -129,6 +140,9 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
             // remove the bow and arrow preview
             bowAndArrow = null;
+
+            if (archer != null)
+                archer.resetBowAndArrow();
         }
     }
 

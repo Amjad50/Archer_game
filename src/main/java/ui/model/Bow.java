@@ -93,4 +93,10 @@ public class Bow implements DrawableModel {
         updateWidth();
         return startPosition.add(direction.remagnitude(width));
     }
+
+    public Vector getYarnEndPosition() {
+        if(direction.magnitude() == 0)
+            return new Vector();
+        return startPosition.sub(new Vector(Math.cos(direction.angleRad()), Math.sin(direction.angleRad())).scale(direction.magnitude()));
+    }
 }

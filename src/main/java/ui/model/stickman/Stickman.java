@@ -9,19 +9,20 @@ import java.awt.*;
 public class Stickman implements DrawableModel {
 
     // Measurements
-    private static final int HEAD_RADIUS = 1;
-    private static final int ARM_LEG_SECTION_LENGTH = 3;
-    private static final int TORSO_HEIGHT = 4;
-    private static final int BODY_HEIGHT = HEAD_RADIUS * 2 + TORSO_HEIGHT + ARM_LEG_SECTION_LENGTH * 2;
+    protected static final int HEAD_RADIUS = 1;
+    protected static final int ARM_LEG_SECTION_LENGTH = 3;
+    protected static final int TORSO_HEIGHT = 4;
+    protected static final int BODY_HEIGHT = HEAD_RADIUS * 2 + TORSO_HEIGHT + ARM_LEG_SECTION_LENGTH * 2;
+    protected static final double BOW_HEIGHT = 9;
 
     private Vector groundPosition = new Vector();
 
     // parts
     private double bodyWidth;
-    private double bodyHeight;
-    private double headRadius;
+    protected double bodyHeight;
+    protected double headRadius;
 
-    private Vector wist = new Vector();
+    protected Vector wist = new Vector();
     private Vector leftLeg = new Vector();
     private Vector rightLeg = new Vector();
     private Vector shoulderCenter = new Vector();

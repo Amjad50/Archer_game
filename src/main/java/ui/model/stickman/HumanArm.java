@@ -37,7 +37,6 @@ public class HumanArm extends Arm {
 
         if (lastAngle > 180)
             lastAngle -= 360;
-        System.out.println(firstAngle + " " + lastAngle);
 
         return firstAngle > lastAngle;
     }
