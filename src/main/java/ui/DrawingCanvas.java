@@ -240,5 +240,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
         int units = mouseWheelEvent.getUnitsToScroll();
         offset.x += units * 10;
+
+        // make the mouseStart offset from the screen and not the world dimensions
+        mouseStart.x -= units * 10;
     }
 }
