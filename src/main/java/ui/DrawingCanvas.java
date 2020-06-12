@@ -2,6 +2,7 @@ package ui;
 
 import ui.model.Archer;
 import ui.model.Arrow;
+import ui.model.LocatorArrow;
 import ui.model.stickman.Arm;
 import utils.Vector;
 
@@ -27,6 +28,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private ArrayList<Arrow> arrows = new ArrayList<>();
     private Archer p1, p2;
     private Arm arm = new Arm();
+    private LocatorArrow p1Locator = new LocatorArrow();
+    private LocatorArrow p2Locator = new LocatorArrow();
 
     public DrawingCanvas() {
         addMouseListener(this);
@@ -74,12 +77,22 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             p1.update(delta);
             if (dragging && playerSelector)
                 p1.draw(arrowDirection);
+            if (p1Locator != null) {
+                p1Locator.setPosition(new Vector(getWidth() / 2. - 100, 30));
+                p1Locator.setTarget(p1.getGroundPosition().add(offset));
+                p1Locator.update(delta);
+            }
         }
 
         if (p2 != null) {
             p2.update(delta);
             if (dragging && !playerSelector)
                 p2.draw(arrowDirection);
+            if (p2Locator != null) {
+                p2Locator.setPosition(new Vector(getWidth() / 2. + 100, 30));
+                p2Locator.setTarget(p2.getGroundPosition().add(offset));
+                p2Locator.update(delta);
+            }
         }
     }
 
@@ -98,6 +111,16 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         drawFPS(g);
         // write the angle of the arrow
         g.drawString(String.valueOf(arrowDirection.flipY().angleDeg()), 0, 30);
+
+        if (p1Locator != null) {
+            g.drawString("P1", (int) (p1Locator.getPosition().x - p1Locator.getRadius() * 2), (int) p1Locator.getPosition().y);
+            p1Locator.render(g);
+        }
+
+        if (p2Locator != null) {
+            g.drawString("P2", (int) (p2Locator.getPosition().x - p2Locator.getRadius() * 2), (int) p2Locator.getPosition().y);
+            p2Locator.render(g);
+        }
 
         // Scroll all objects
         g.translate(offset.x, offset.y);
@@ -173,7 +196,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 archer = p2;
             }
 
-            if (archer != null){
+            if (archer != null) {
                 Arrow arrow = archer.releaseArrow();
                 arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
 
