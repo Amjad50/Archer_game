@@ -8,6 +8,7 @@ import java.awt.*;
 public class Archer extends Stickman {
 
     private BowAndArrow bowAndArrow;
+    private boolean first_time = true;
 
     public Archer(double height) {
         super(height);
@@ -29,9 +30,13 @@ public class Archer extends Stickman {
     public void update(double delta) {
         super.update(delta);
 
-        Vector farLeft = new Vector(-bodyHeight, 0);
-        setRightHandPosition(farLeft);
-        setLeftHandPosition(farLeft);
+        // running this everytime makes the arm laggy, one time is good (not perfect).
+        if(first_time) {
+            Vector farLeft = new Vector(-bodyHeight, 0);
+            setRightHandPosition(farLeft);
+            setLeftHandPosition(farLeft);
+            first_time = false;
+        }
 
         if (bowAndArrow != null) {
             bowAndArrow.update(delta);
