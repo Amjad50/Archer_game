@@ -39,7 +39,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         groundHeight = 100;
 
         p1 = new Archer(200);
-        p2 = new Archer(200);
+        p2 = new Archer(200, true);
     }
 
     public void update(double delta, long fps) {

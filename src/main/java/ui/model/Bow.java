@@ -74,6 +74,11 @@ public class Bow implements DrawableModel {
     public Vector setDirectionNormalized(Vector direction) {
         if (direction.magnitude() > maxDraw)
             this.direction = direction.remagnitude(maxDraw);
+        else if (direction.magnitude() == 0)
+            // fix problem of NaN vector
+            // FIXME: on flipped archer, if its NaN vector, it will point the bow to the right
+            //  instead of to the left which is correct <Vector(-1, 0)>
+            this.direction = new Vector(1, 0);
         else
             this.direction = direction;
 
@@ -95,7 +100,7 @@ public class Bow implements DrawableModel {
     }
 
     public Vector getYarnEndPosition() {
-        if(direction.magnitude() == 0)
+        if (direction.magnitude() == 0)
             return new Vector();
         return startPosition.sub(new Vector(Math.cos(direction.angleRad()), Math.sin(direction.angleRad())).scale(direction.magnitude()));
     }
