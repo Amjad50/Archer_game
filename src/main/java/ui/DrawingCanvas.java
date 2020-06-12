@@ -20,7 +20,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private boolean dragging = false;
 
     // true p1, false p2
-    private boolean playerSelector = false;
+    private boolean playerSelector = true;
 
     private Vector offset = new Vector();
     private double groundHeight;
@@ -126,7 +126,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         if (p1Locator != null) {
             g.drawString("P1", (int) (p1Locator.getPosition().x - p1Locator.getRadius() * 2), (int) p1Locator.getPosition().y);
             // Color the arrow for (next player) player 1 to green
-            if (!playerSelector)
+            if (playerSelector)
                 g.setPaint(Color.GREEN);
             p1Locator.render(g);
         }
@@ -136,7 +136,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             g.drawString("P2", (int) (p2Locator.getPosition().x - p2Locator.getRadius() * 2), (int) p2Locator.getPosition().y);
 
             // Color the arrow for (next player) player 2 to green
-            if (playerSelector)
+            if (!playerSelector)
                 g.setPaint(Color.GREEN);
             p2Locator.render(g);
         }
@@ -185,12 +185,11 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         switch (mouseEvent.getButton()) {
             case MouseEvent.BUTTON1: {
                 Vector mousePosition = new Vector(mouseEvent.getPoint()).sub(offset);
-                Archer player = (!playerSelector) ? p1 : p2;
+                Archer player = (playerSelector) ? p1 : p2;
 
                 // only select if the player in java
                 if (player.getGroundPosition().sub(mousePosition).magnitude() < Math.max(getWidth(), getHeight()) / 2.) {
                     dragging = true;
-                    playerSelector = !playerSelector;
                     mouseStart.setValue(mousePosition);
                     mouseCurrent.setValue(mousePosition);
                 }
@@ -216,6 +215,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             } else if (!playerSelector && p2 != null) {
                 archer = p2;
             }
+
+            playerSelector = !playerSelector;
 
             if (archer != null) {
                 Arrow arrow = archer.releaseArrow();
