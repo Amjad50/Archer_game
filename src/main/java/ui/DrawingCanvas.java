@@ -18,11 +18,14 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private Vector arrowDirection = new Vector();
     private boolean dragging = false;
 
+    // true p1, false p2
+    private boolean playerSelector = false;
+
     private Vector offset = new Vector();
     private double groundHeight;
 
     private ArrayList<Arrow> arrows = new ArrayList<>();
-    private Archer archer;
+    private Archer p1, p2;
     private Arm arm = new Arm();
 
     public DrawingCanvas() {
@@ -67,10 +70,16 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             arm.setBase(new Vector(getWidth() / 2., getHeight()));
         }
 
-        if (archer != null) {
-            archer.update(delta);
-            if (dragging)
-                archer.draw(arrowDirection);
+        if (p1 != null) {
+            p1.update(delta);
+            if (dragging && playerSelector)
+                p1.draw(arrowDirection);
+        }
+
+        if (p2 != null) {
+            p2.update(delta);
+            if (dragging && !playerSelector)
+                p2.draw(arrowDirection);
         }
     }
 
@@ -115,8 +124,11 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
         if (arm != null)
             arm.render(g);
-        if (archer != null)
-            archer.render(g);
+
+        if (p1 != null)
+            p1.render(g);
+        if (p2 != null)
+            p2.render(g);
     }
 
     private void drawFPS(Graphics2D g) {
@@ -128,6 +140,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         switch (mouseEvent.getButton()) {
             case MouseEvent.BUTTON1: {
                 dragging = true;
+                playerSelector = !playerSelector;
                 mouseStart.setValue(mouseEvent.getPoint());
                 mouseStart = mouseStart.sub(offset);
 
@@ -136,12 +149,13 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 break;
             }
             case MouseEvent.BUTTON2: {
-                archer = new Archer(200);
-                archer.setGroundPosition(new Vector(mouseEvent.getPoint()).sub(offset));
+                p1 = new Archer(200);
+                p1.setGroundPosition(new Vector(mouseEvent.getPoint()).sub(offset));
                 break;
             }
             case MouseEvent.BUTTON3: {
-                // not used
+                p2 = new Archer(200);
+                p2.setGroundPosition(new Vector(mouseEvent.getPoint()).sub(offset));
                 break;
             }
         }
@@ -151,7 +165,15 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     public void mouseReleased(MouseEvent mouseEvent) {
         if (dragging) {
             dragging = false;
-            if (archer != null) {
+
+            Archer archer = null;
+            if (playerSelector && p1 != null) {
+                archer = p1;
+            } else if (!playerSelector && p2 != null) {
+                archer = p2;
+            }
+
+            if (archer != null){
                 Arrow arrow = archer.releaseArrow();
                 arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
 
