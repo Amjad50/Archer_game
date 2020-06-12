@@ -33,16 +33,18 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         groundHeight = 100;
     }
 
-    public void render(double delta, long fps) {
-        prepareRender(delta);
+    public void update(double delta, long fps) {
         this.fps = fps;
+        update(delta);
+    }
+
+    public void render() {
         repaint();
     }
 
-    private void prepareRender(double delta) {
-        if (dragging) {
+    private void update(double delta) {
+        if (dragging)
             arrowDirection = mouseStart.sub(mouseCurrent);
-        }
 
         Arrow last = null;
         for (Arrow arrow : arrows) {
