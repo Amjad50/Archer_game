@@ -53,6 +53,11 @@ public class Vector {
         y = point.y;
     }
 
+    public void setValue(Vector other) {
+        x = other.x;
+        y = other.y;
+    }
+
     public Vector scale(double v) {
         return new Vector(x * v, y * v);
     }

@@ -175,13 +175,17 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     public void mousePressed(MouseEvent mouseEvent) {
         switch (mouseEvent.getButton()) {
             case MouseEvent.BUTTON1: {
-                dragging = true;
-                playerSelector = !playerSelector;
-                mouseStart.setValue(mouseEvent.getPoint());
-                mouseStart = mouseStart.sub(offset);
+                Vector mousePosition = new Vector(mouseEvent.getPoint()).sub(offset);
+                Archer player = (!playerSelector) ? p1 : p2;
 
-                mouseCurrent.setValue(mouseEvent.getPoint());
-                mouseCurrent = mouseCurrent.sub(offset);
+                // only select if the player in java
+                if (player.getGroundPosition().sub(mousePosition).magnitude() < Math.max(getWidth(), getHeight()) / 2.) {
+                    dragging = true;
+                    playerSelector = !playerSelector;
+                    mouseStart.setValue(mousePosition);
+                    mouseCurrent.setValue(mousePosition);
+                }
+
                 break;
             }
             case MouseEvent.BUTTON2: {
