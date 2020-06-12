@@ -37,6 +37,9 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         addMouseWheelListener(this);
 
         groundHeight = 100;
+
+        p1 = new Archer(200);
+        p2 = new Archer(200);
     }
 
     public void update(double delta, long fps) {
@@ -74,6 +77,9 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         }
 
         if (p1 != null) {
+            // update player position in case of window resize
+            p1.setGroundPosition(new Vector(200, getHeight() - groundHeight));
+
             p1.update(delta);
             if (dragging && playerSelector)
                 p1.draw(arrowDirection);
@@ -85,6 +91,9 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         }
 
         if (p2 != null) {
+            // update player position in case of window resize
+            p2.setGroundPosition(new Vector(3500, getHeight() - groundHeight));
+
             p2.update(delta);
             if (dragging && !playerSelector)
                 p2.draw(arrowDirection);
@@ -188,14 +197,9 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
                 break;
             }
-            case MouseEvent.BUTTON2: {
-                p1 = new Archer(200);
-                p1.setGroundPosition(new Vector(mouseEvent.getPoint()).sub(offset));
-                break;
-            }
+            case MouseEvent.BUTTON2:
             case MouseEvent.BUTTON3: {
-                p2 = new Archer(200);
-                p2.setGroundPosition(new Vector(mouseEvent.getPoint()).sub(offset));
+                // not used
                 break;
             }
         }
