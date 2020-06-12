@@ -112,21 +112,39 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         // write the angle of the arrow
         g.drawString(String.valueOf(arrowDirection.flipY().angleDeg()), 0, 30);
 
+        Paint old_paint = g.getPaint();
+
         if (p1Locator != null) {
             g.drawString("P1", (int) (p1Locator.getPosition().x - p1Locator.getRadius() * 2), (int) p1Locator.getPosition().y);
+            // Color the arrow for (next player) player 1 to green
+            if (!playerSelector)
+                g.setPaint(Color.GREEN);
             p1Locator.render(g);
         }
+        g.setPaint(old_paint);
 
         if (p2Locator != null) {
             g.drawString("P2", (int) (p2Locator.getPosition().x - p2Locator.getRadius() * 2), (int) p2Locator.getPosition().y);
+
+            // Color the arrow for (next player) player 2 to green
+            if (playerSelector)
+                g.setPaint(Color.GREEN);
             p2Locator.render(g);
         }
+
+        // restore
+        g.setPaint(old_paint);
 
         // Scroll all objects
         g.translate(offset.x, offset.y);
 
         // ground
         g.drawLine(-10000, (int) (getHeight() - groundHeight), 10000, (int) (getHeight() - groundHeight));
+
+        if (p1 != null)
+            p1.render(g);
+        if (p2 != null)
+            p2.render(g);
 
         for (Arrow arrow : arrows) {
             arrow.render(g);
@@ -135,7 +153,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         // color the last arrow as green
         if (arrows.size() > 0) {
             Stroke old_stroke = g.getStroke();
-            Paint old_paint = g.getPaint();
+            old_paint = g.getPaint();
 
             g.setPaint(Color.GREEN);
             g.setStroke(new BasicStroke(5));
@@ -147,11 +165,6 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
         if (arm != null)
             arm.render(g);
-
-        if (p1 != null)
-            p1.render(g);
-        if (p2 != null)
-            p2.render(g);
     }
 
     private void drawFPS(Graphics2D g) {
