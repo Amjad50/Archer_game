@@ -127,7 +127,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         Paint old_paint = g.getPaint();
 
         if (p1Locator != null) {
-            g.drawString("P1", (int) (p1Locator.getPosition().x - p1Locator.getRadius() * 2), (int) p1Locator.getPosition().y);
+            g.drawString("Player1", (int) (p1Locator.getPosition().x - p1Locator.getRadius() * 2.5), (int) p1Locator.getPosition().y);
             // Color the arrow for (next player) player 1 to green
             if (playerSelector)
                 g.setPaint(Color.GREEN);
@@ -136,7 +136,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         g.setPaint(old_paint);
 
         if (p2Locator != null) {
-            g.drawString("P2", (int) (p2Locator.getPosition().x - p2Locator.getRadius() * 2), (int) p2Locator.getPosition().y);
+            g.drawString("Player2", (int) (p2Locator.getPosition().x - p2Locator.getRadius() * 2.5), (int) p2Locator.getPosition().y);
 
             // Color the arrow for (next player) player 2 to green
             if (!playerSelector)
