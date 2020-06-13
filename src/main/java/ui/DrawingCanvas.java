@@ -17,6 +17,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private Vector mouseCurrent = new Vector();
     private Vector arrowDirection = new Vector();
     private boolean dragging = false;
+    private boolean gameOver = false;
 
     // true p1, false p2
     private boolean playerSelector = true;
@@ -55,6 +56,11 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     }
 
     private void update(double delta) {
+        if (gameOver) {
+            offset = new Vector();
+            return;
+        }
+
         if (dragging)
             arrowDirection = mouseStart.sub(mouseCurrent);
 
@@ -72,8 +78,13 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
                 HealthBar bar = (shot.isTargetPlayer1) ? p1Health : p2Health;
 
-                if (bar != null)
+                if (bar != null) {
                     bar.decreaseHealth(10);
+
+                    if (bar.getHealth() == 0) {
+                        gameOver = true;
+                    }
+                }
 
                 shot.bleed = false;
             }
@@ -146,6 +157,11 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     }
 
     private void innerRender(Graphics2D g) {
+        if (gameOver) {
+            renderGameOver(g);
+            return;
+        }
+
         drawFPS(g);
         // write the angle of the arrow
         g.drawString(String.valueOf(arrowDirection.flipY().angleDeg()), 0, 30);
@@ -223,6 +239,16 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
         if (arm != null)
             arm.render(g);
+    }
+
+    private void renderGameOver(Graphics2D g) {
+        g.setFont(new Font("monospace", Font.PLAIN, 100));
+        FontMetrics metrics = g.getFontMetrics();
+        String string = "GAME OVER";
+        int stringWidth = metrics.stringWidth(string);
+        int gameOverStringY = getHeight() / 2 + metrics.getHeight() / 3;
+
+        g.drawString(string, getWidth() / 2 - stringWidth / 2, gameOverStringY);
     }
 
     private void drawFPS(Graphics2D g) {
