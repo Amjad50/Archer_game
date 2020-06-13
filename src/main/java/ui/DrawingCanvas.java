@@ -72,7 +72,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 HealthBar bar = (shot.isTargetPlayer1) ? p1Health : p2Health;
 
                 if (bar != null)
-                    bar.setHealth(bar.getHealth() - 10);
+                    bar.decreaseHealth(10);
 
                 shot.bleed = false;
             }

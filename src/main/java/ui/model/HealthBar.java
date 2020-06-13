@@ -18,11 +18,16 @@ public class HealthBar implements DrawableModel {
     private double height;
     private double offset;
 
+    private double slowDecreaseHealth;
+    private double slowDecreasePercentage;
+
     public HealthBar(double maxHealth) {
         this(maxHealth, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     public HealthBar(double maxHealth, double width, double height) {
+        assert maxHealth > 0;
+
         this.maxHealth = maxHealth;
         this.currentHealth = maxHealth;
         this.width = width;
@@ -34,7 +39,14 @@ public class HealthBar implements DrawableModel {
     @Override
     public void update(double delta) {
         percentage = currentHealth / maxHealth;
-        System.out.println(percentage);
+        slowDecreasePercentage = slowDecreaseHealth / maxHealth;
+
+        double change = maxHealth * 0.001;
+
+        if (slowDecreaseHealth - change > currentHealth && currentHealth != 0)
+            slowDecreaseHealth -= change;
+        else
+            slowDecreaseHealth = currentHealth;
     }
 
     @Override
@@ -53,6 +65,13 @@ public class HealthBar implements DrawableModel {
                 (int) (position.x + offset),
                 (float) (position.y + height / 2 - metrics.getHeight() / 2 + metrics.getAscent()));
 
+        // under the health bar and the one that shows the slow decreasing health effect
+        g.setPaint(Color.PINK);
+        g.fillRect((int) (position.x + offset * 2 + stringWidth),
+                (int) (position.y + offset),
+                (int) ((width - stringWidth - offset * 3) * slowDecreasePercentage),
+                (int) (height - offset * 2));
+
         g.setPaint(Color.RED);
         g.fillRect((int) (position.x + offset * 2 + stringWidth),
                 (int) (position.y + offset),
@@ -67,8 +86,10 @@ public class HealthBar implements DrawableModel {
         return false;
     }
 
-    public void setHealth(double health) {
-        currentHealth = health;
+    public void decreaseHealth(double amount) {
+        currentHealth -= amount;
+        if (currentHealth < 0)
+            currentHealth = 0;
     }
 
     public void setPosition(Vector position) {
