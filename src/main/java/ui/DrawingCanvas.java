@@ -103,14 +103,14 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             p1.update(delta);
             if (dragging && playerSelector)
                 p1.draw(arrowDirection);
-            if (p1Locator != null) {
-                p1Locator.setPosition(new Vector(getWidth() / 2. - 100, 30));
-                p1Locator.setTarget(p1.getGroundPosition().add(offset));
-                p1Locator.update(delta);
-            }
             if (p1Health != null) {
-                p1Health.setPosition(new Vector(30, 30));
+                p1Health.setPosition(new Vector(30, 30 - p1Health.getHeight() / 2));
                 p1Health.update(delta);
+                if (p1Locator != null) {
+                    p1Locator.setPosition(new Vector(p1Health.getPosition().x + p1Health.getWidth() + p1Locator.getRadius() * 1.5, p1Health.getPosition().y + p1Health.getHeight() / 2));
+                    p1Locator.setTarget(p1.getGroundPosition().add(offset));
+                    p1Locator.update(delta);
+                }
             }
         }
 
@@ -121,14 +121,15 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             p2.update(delta);
             if (dragging && !playerSelector)
                 p2.draw(arrowDirection);
-            if (p2Locator != null) {
-                p2Locator.setPosition(new Vector(getWidth() / 2. + 100, 30));
-                p2Locator.setTarget(p2.getGroundPosition().add(offset));
-                p2Locator.update(delta);
-            }
             if (p2Health != null) {
-                p2Health.setPosition(new Vector(getWidth() - 30 - p2Health.getWidth(), 30));
+                p2Health.setPosition(new Vector(getWidth() - 30 - p2Health.getWidth(), 30 - p2Health.getHeight() / 2));
                 p2Health.update(delta);
+
+                if (p2Locator != null) {
+                    p2Locator.setPosition(new Vector(p2Health.getPosition().x - p2Locator.getRadius() * 1.5, p2Health.getPosition().y + p2Health.getHeight() / 2));
+                    p2Locator.setTarget(p2.getGroundPosition().add(offset));
+                    p2Locator.update(delta);
+                }
             }
         }
     }
@@ -150,9 +151,14 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         g.drawString(String.valueOf(arrowDirection.flipY().angleDeg()), 0, 30);
 
         Paint old_paint = g.getPaint();
+        FontMetrics metrics = g.getFontMetrics();
 
         if (p1Locator != null) {
-            g.drawString("Player1", (int) (p1Locator.getPosition().x - p1Locator.getRadius() * 2.5), (int) p1Locator.getPosition().y);
+            String string = "Player 1";
+            int stringWidth = metrics.stringWidth(string);
+            g.drawString(string,
+                    (int) (p1Health.getPosition().x + p1Health.getWidth() / 2 - stringWidth / 2),
+                    (int) (p1Health.getPosition().y - 10));
             // Color the arrow for (next player) player 1 to green
             if (playerSelector)
                 g.setPaint(Color.GREEN);
@@ -163,7 +169,11 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             p1Health.render(g);
 
         if (p2Locator != null) {
-            g.drawString("Player2", (int) (p2Locator.getPosition().x - p2Locator.getRadius() * 2.5), (int) p2Locator.getPosition().y);
+            String string = "Player 2";
+            int stringWidth = metrics.stringWidth(string);
+            g.drawString(string,
+                    (int) (p2Health.getPosition().x + p2Health.getWidth() / 2 - stringWidth / 2),
+                    (int) (p2Health.getPosition().y - 10));
 
             // Color the arrow for (next player) player 2 to green
             if (!playerSelector)

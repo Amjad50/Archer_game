@@ -10,6 +10,8 @@ public class HealthBar implements DrawableModel {
     private static final double DEFAULT_HEIGHT = 20;
     private static final double DEFAULT_OFFSET = 5;
 
+    private static final double DEFAULT_DECREASE_RATE = 0.0006;
+
     private Vector position;
     private double maxHealth;
     private double currentHealth;
@@ -41,7 +43,7 @@ public class HealthBar implements DrawableModel {
         percentage = currentHealth / maxHealth;
         slowDecreasePercentage = slowDecreaseHealth / maxHealth;
 
-        double change = maxHealth * 0.001;
+        double change = maxHealth * DEFAULT_DECREASE_RATE;
 
         if (slowDecreaseHealth - change > currentHealth && currentHealth != 0)
             slowDecreaseHealth -= change;
@@ -102,5 +104,13 @@ public class HealthBar implements DrawableModel {
 
     public double getWidth() {
         return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public Vector getPosition() {
+        return position;
     }
 }
