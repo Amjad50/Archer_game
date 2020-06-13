@@ -26,6 +26,18 @@ public class Ball implements DrawableModel {
         this.acceleration = v;
     }
 
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
+
+    public Vector getPosition() {
+        return position;
+    }
+
     @Override
     public void update(double delta) {
         velocity = velocity.add(acceleration.scale(delta));

@@ -6,6 +6,7 @@ import ui.model.Rect;
 public class Shot {
     public Arrow arrow;
     public Rect target;
+    public boolean bleed = true;
 
     public Shot(Arrow arrow, Rect target) {
         this.arrow = arrow;

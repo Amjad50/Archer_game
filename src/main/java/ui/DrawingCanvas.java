@@ -1,9 +1,6 @@
 package ui;
 
-import ui.model.Archer;
-import ui.model.Arrow;
-import ui.model.LocatorArrow;
-import ui.model.Rect;
+import ui.model.*;
 import ui.model.stickman.Arm;
 import utils.Vector;
 
@@ -31,6 +28,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private Arm arm = new Arm();
     private LocatorArrow p1Locator = new LocatorArrow();
     private LocatorArrow p2Locator = new LocatorArrow();
+
+    private Blood blood;
 
     public DrawingCanvas() {
         addMouseListener(this);
@@ -63,8 +62,17 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             ) {
                 shot.arrow.update(delta);
                 last = shot.arrow;
+            } else if (shot.bleed && shot.arrow.isInBound(shot.target)) {
+                blood = new Blood(shot.arrow.getPosition());
+                blood.setGroundHeight(getHeight() - groundHeight);
+                blood.setGravity(new Vector(0, 9.8).scale(0.02));
+                shot.bleed = false;
             }
         }
+
+        if(blood != null)
+            blood.update(delta);
+
         // follow the last arrow
         if (last != null) {
             offset.x = -(last.getPosition().x - getWidth() / 2.);
@@ -178,6 +186,9 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             g.setStroke(old_stroke);
             g.setPaint(old_paint);
         }
+
+        if(blood != null)
+            blood.render(g);
 
         if (arm != null)
             arm.render(g);
