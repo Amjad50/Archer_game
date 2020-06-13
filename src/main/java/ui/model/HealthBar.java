@@ -7,7 +7,7 @@ import java.awt.*;
 public class HealthBar implements DrawableModel {
 
     private static final double DEFAULT_WIDTH = 200;
-    private static final double DEFAULT_HEIGHT = 50;
+    private static final double DEFAULT_HEIGHT = 20;
     private static final double DEFAULT_OFFSET = 5;
 
     private Vector position;

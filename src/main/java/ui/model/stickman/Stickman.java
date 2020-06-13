@@ -90,10 +90,10 @@ public class Stickman implements DrawableModel {
 
     public Rect getBounds() {
         Vector topLeft = new Vector();
-        topLeft.x = groundPosition.x - bodyWidth;
+        topLeft.x = groundPosition.x - bodyWidth / 2;
         topLeft.y = groundPosition.y - bodyHeight;
 
-        return new Rect(topLeft, bodyWidth * 2, bodyHeight);
+        return new Rect(topLeft, bodyWidth, bodyHeight);
     }
 
     public void setGroundPosition(Vector position) {

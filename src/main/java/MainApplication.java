@@ -6,7 +6,7 @@ import java.util.TimerTask;
 
 public class MainApplication extends JFrame {
 
-    private static final int FPS = 90;
+    private static final int FPS = 250;
     private static final int FPS_60 = 60;
 
     DrawingCanvas canvas;

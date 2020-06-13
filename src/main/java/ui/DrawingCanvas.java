@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
 
@@ -183,29 +184,29 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
         if (p1 != null) {
             p1.render(g);
-            p1.getBounds().render(g);
         }
         if (p2 != null) {
             p2.render(g);
-            p2.getBounds().render(g);
         }
 
-        for (Shot shot : shots) {
+        Stroke old_stroke = g.getStroke();
+        old_paint = g.getPaint();
+
+        for (Iterator<Shot> iterator = shots.iterator(); iterator.hasNext(); ) {
+            Shot shot = iterator.next();
+
+            // color the last arrow as green
+            if (!iterator.hasNext()) {
+                g.setPaint(Color.GREEN);
+                g.setStroke(new BasicStroke(5));
+            }
+
             shot.arrow.render(g);
         }
+        // restore
+        g.setStroke(old_stroke);
+        g.setPaint(old_paint);
 
-        // color the last arrow as green
-        if (shots.size() > 0) {
-            Stroke old_stroke = g.getStroke();
-            old_paint = g.getPaint();
-
-            g.setPaint(Color.GREEN);
-            g.setStroke(new BasicStroke(5));
-            shots.get(shots.size() - 1).arrow.render(g);
-
-            g.setStroke(old_stroke);
-            g.setPaint(old_paint);
-        }
 
         if (blood != null)
             blood.render(g);
