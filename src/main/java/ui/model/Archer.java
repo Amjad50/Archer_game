@@ -68,4 +68,8 @@ public class Archer extends Stickman {
 
         return arrow;
     }
+
+    public double getPowerPercentage() {
+        return bowAndArrow.getDirection().magnitude() / bowAndArrow.getMaxDraw();
+    }
 }

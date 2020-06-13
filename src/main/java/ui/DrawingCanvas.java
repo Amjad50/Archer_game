@@ -163,8 +163,14 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         }
 
         drawFPS(g);
-        // write the angle of the arrow
-        g.drawString(String.valueOf(arrowDirection.flipY().angleDeg()), 0, 30);
+
+        Archer archer = (playerSelector) ? p1 : p2;
+
+        // write the angle and power of the arrow
+        if (dragging) {
+            g.drawString("Angle = " + arrowDirection.flipY().angleDeg(), 0, 60);
+            g.drawString("Power = " + (int) (archer.getPowerPercentage() * 100), 0, 60 + g.getFontMetrics().getHeight() + 10);
+        }
 
         Paint old_paint = g.getPaint();
         FontMetrics metrics = g.getFontMetrics();
@@ -252,7 +258,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     }
 
     private void drawFPS(Graphics2D g) {
-        g.drawString(String.valueOf(fps), 0, 10);
+        g.drawString("FPS: " + fps, 0, 10);
     }
 
     @Override

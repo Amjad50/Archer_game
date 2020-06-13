@@ -69,4 +69,8 @@ public class BowAndArrow implements DrawableModel {
     public Vector getDirection() {
         return direction;
     }
+
+    public double getMaxDraw() {
+        return bow.getMaxDraw();
+    }
 }

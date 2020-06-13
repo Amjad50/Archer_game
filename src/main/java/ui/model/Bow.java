@@ -94,6 +94,10 @@ public class Bow implements DrawableModel {
         this.maxDraw = maxWholeWidth - MAX_BOW_WIDTH;
     }
 
+    public double getMaxDraw() {
+        return maxDraw;
+    }
+
     public Vector getEndPosition() {
         updateWidth();
         return startPosition.add(direction.remagnitude(width));
