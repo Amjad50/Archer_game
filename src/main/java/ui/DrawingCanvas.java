@@ -26,7 +26,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private Vector offset = new Vector();
     private double groundHeight;
 
-    private ArrayList<Arrow> arrows = new ArrayList<>();
+    private ArrayList<Shot> shots = new ArrayList<>();
     private Archer p1, p2;
     private Arm arm = new Arm();
     private LocatorArrow p1Locator = new LocatorArrow();
@@ -57,15 +57,12 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             arrowDirection = mouseStart.sub(mouseCurrent);
 
         Arrow last = null;
-        for (Arrow arrow : arrows) {
-            // might have Null pointer exception
-            Rect pRect = (playerSelector ? p2 : p1).getBounds();
-
-            if (!arrow.isInBound(new Rect(new Vector(-10000, getHeight() - groundHeight), 20000, 1000)) &&
-                    !arrow.isInBound(pRect)
+        for (Shot shot : shots) {
+            if (!shot.arrow.isInBound(new Rect(new Vector(-10000, getHeight() - groundHeight), 20000, 1000)) &&
+                    !shot.arrow.isInBound(shot.target)
             ) {
-                arrow.update(delta);
-                last = arrow;
+                shot.arrow.update(delta);
+                last = shot.arrow;
             }
         }
         // follow the last arrow
@@ -165,18 +162,18 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             p2.getBounds().render(g);
         }
 
-        for (Arrow arrow : arrows) {
-            arrow.render(g);
+        for (Shot shot : shots) {
+            shot.arrow.render(g);
         }
 
         // color the last arrow as green
-        if (arrows.size() > 0) {
+        if (shots.size() > 0) {
             Stroke old_stroke = g.getStroke();
             old_paint = g.getPaint();
 
             g.setPaint(Color.GREEN);
             g.setStroke(new BasicStroke(5));
-            arrows.get(arrows.size() - 1).render(g);
+            shots.get(shots.size() - 1).arrow.render(g);
 
             g.setStroke(old_stroke);
             g.setPaint(old_paint);
@@ -220,19 +217,26 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             dragging = false;
 
             Archer archer = null;
+            Rect target = null;
             if (playerSelector && p1 != null) {
                 archer = p1;
+
+                if (p2 != null)
+                    target = p2.getBounds();
             } else if (!playerSelector && p2 != null) {
                 archer = p2;
+
+                if (p1 != null)
+                    target = p1.getBounds();
             }
 
             playerSelector = !playerSelector;
 
-            if (archer != null) {
+            if (archer != null && target != null) {
                 Arrow arrow = archer.releaseArrow();
                 arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
 
-                arrows.add(arrow);
+                shots.add(new Shot(arrow, target));
 
                 archer.resetBowAndArrow();
             }
