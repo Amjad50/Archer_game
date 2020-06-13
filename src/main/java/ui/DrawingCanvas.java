@@ -28,6 +28,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private Arm arm = new Arm();
     private LocatorArrow p1Locator = new LocatorArrow();
     private LocatorArrow p2Locator = new LocatorArrow();
+    private HealthBar p1Health = new HealthBar(100);
+    private HealthBar p2Health = new HealthBar(100);
 
     private Blood blood;
 
@@ -66,11 +68,17 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 blood = new Blood(shot.arrow.getPosition());
                 blood.setGroundHeight(getHeight() - groundHeight);
                 blood.setGravity(new Vector(0, 9.8).scale(0.02));
+
+                HealthBar bar = (shot.isTargetPlayer1) ? p1Health : p2Health;
+
+                if (bar != null)
+                    bar.setHealth(bar.getHealth() - 10);
+
                 shot.bleed = false;
             }
         }
 
-        if(blood != null)
+        if (blood != null)
             blood.update(delta);
 
         // follow the last arrow
@@ -99,6 +107,10 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 p1Locator.setTarget(p1.getGroundPosition().add(offset));
                 p1Locator.update(delta);
             }
+            if (p1Health != null) {
+                p1Health.setPosition(new Vector(30, 30));
+                p1Health.update(delta);
+            }
         }
 
         if (p2 != null) {
@@ -112,6 +124,10 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 p2Locator.setPosition(new Vector(getWidth() / 2. + 100, 30));
                 p2Locator.setTarget(p2.getGroundPosition().add(offset));
                 p2Locator.update(delta);
+            }
+            if (p2Health != null) {
+                p2Health.setPosition(new Vector(getWidth() - 30 - p2Health.getWidth(), 30));
+                p2Health.update(delta);
             }
         }
     }
@@ -142,6 +158,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             p1Locator.render(g);
         }
         g.setPaint(old_paint);
+        if (p1Health != null)
+            p1Health.render(g);
 
         if (p2Locator != null) {
             g.drawString("Player2", (int) (p2Locator.getPosition().x - p2Locator.getRadius() * 2.5), (int) p2Locator.getPosition().y);
@@ -151,9 +169,11 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 g.setPaint(Color.GREEN);
             p2Locator.render(g);
         }
-
         // restore
         g.setPaint(old_paint);
+
+        if (p2Health != null)
+            p2Health.render(g);
 
         // Scroll all objects
         g.translate(offset.x, offset.y);
@@ -187,7 +207,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             g.setPaint(old_paint);
         }
 
-        if(blood != null)
+        if (blood != null)
             blood.render(g);
 
         if (arm != null)
@@ -247,7 +267,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 Arrow arrow = archer.releaseArrow();
                 arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
 
-                shots.add(new Shot(arrow, target));
+                shots.add(new Shot(arrow, target, playerSelector));
 
                 archer.resetBowAndArrow();
             }
