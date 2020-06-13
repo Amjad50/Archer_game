@@ -1,6 +1,7 @@
 package ui.model.stickman;
 
 import ui.model.DrawableModel;
+import ui.model.Rect;
 import utils.Vector;
 
 import java.awt.*;
@@ -52,12 +53,12 @@ public class Arm implements DrawableModel {
     }
 
     @Override
-    public boolean isInBound(Vector start, double w, double h) {
+    public boolean isInBound(Rect bounds) {
         return false;
     }
 
     public Vector getTipPosition() {
-        if(segments.size() == 0)
+        if (segments.size() == 0)
             return new Vector();
         else
             // The end position of the last arm segment

@@ -3,6 +3,7 @@ package ui;
 import ui.model.Archer;
 import ui.model.Arrow;
 import ui.model.LocatorArrow;
+import ui.model.Rect;
 import ui.model.stickman.Arm;
 import utils.Vector;
 
@@ -57,7 +58,12 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
         Arrow last = null;
         for (Arrow arrow : arrows) {
-            if (!arrow.isInBound(new Vector(-10000, getHeight() - groundHeight), 20000, 1000)) {
+            // might have Null pointer exception
+            Rect pRect = (playerSelector ? p2 : p1).getBounds();
+
+            if (!arrow.isInBound(new Rect(new Vector(-10000, getHeight() - groundHeight), 20000, 1000)) &&
+                    !arrow.isInBound(pRect)
+            ) {
                 arrow.update(delta);
                 last = arrow;
             }
@@ -150,10 +156,14 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         // ground
         g.drawLine(-10000, (int) (getHeight() - groundHeight), 10000, (int) (getHeight() - groundHeight));
 
-        if (p1 != null)
+        if (p1 != null) {
             p1.render(g);
-        if (p2 != null)
+            p1.getBounds().render(g);
+        }
+        if (p2 != null) {
             p2.render(g);
+            p2.getBounds().render(g);
+        }
 
         for (Arrow arrow : arrows) {
             arrow.render(g);

@@ -41,7 +41,7 @@ public class BowAndArrow implements DrawableModel {
     }
 
     @Override
-    public boolean isInBound(Vector start, double w, double h) {
+    public boolean isInBound(Rect bounds) {
         return false;
     }
 

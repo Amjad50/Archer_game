@@ -34,11 +34,14 @@ public class Ball implements DrawableModel {
 
     @Override
     public void render(Graphics2D g) {
-        g.fillOval((int)(position.x - radius), (int)(position.y - radius), (int)radius * 2, (int)radius * 2);
+        g.fillOval((int) (position.x - radius), (int) (position.y - radius), (int) radius * 2, (int) radius * 2);
     }
 
     @Override
-    public boolean isInBound(Vector start, double w, double h) {
-        return position.x <= start.x + w && position.y <= start.y + h && position.x >= start.x && position.y >= start.y;
+    public boolean isInBound(Rect bounds) {
+        return position.x <= bounds.getTopLeft().x + bounds.getWidth() &&
+                position.y <= bounds.getTopLeft().y + bounds.getHeight() &&
+                position.x >= bounds.getTopLeft().x &&
+                position.y >= bounds.getTopLeft().y;
     }
 }

@@ -1,6 +1,7 @@
 package ui.model.stickman;
 
 import ui.model.DrawableModel;
+import ui.model.Rect;
 import utils.Pair;
 import utils.Vector;
 
@@ -83,8 +84,16 @@ public class Stickman implements DrawableModel {
 
     // TODO: implement properly
     @Override
-    public boolean isInBound(Vector start, double w, double h) {
+    public boolean isInBound(Rect bounds) {
         return false;
+    }
+
+    public Rect getBounds() {
+        Vector topLeft = new Vector();
+        topLeft.x = groundPosition.x - bodyWidth;
+        topLeft.y = groundPosition.y - bodyHeight;
+
+        return new Rect(topLeft, bodyWidth * 2, bodyHeight);
     }
 
     public void setGroundPosition(Vector position) {

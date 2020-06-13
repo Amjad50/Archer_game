@@ -50,16 +50,19 @@ public class Arrow implements DrawableModel {
         // rotate the canvas around the tail of the arrow
         g.rotate(velocity.angleRad(), position.x, position.y);
         // draw the arrow pointing the left of position (it will rotated based on the angle of velocity)
-        g.drawLine((int)position.x, (int)position.y, (int) (position.x - length), (int)position.y);
-        g.drawLine((int)position.x, (int)position.y, (int)topArrowShaft.x, (int)topArrowShaft.y);
-        g.drawLine((int)position.x, (int)position.y, (int)bottomArrowShaft.x, (int)bottomArrowShaft.y);
+        g.drawLine((int) position.x, (int) position.y, (int) (position.x - length), (int) position.y);
+        g.drawLine((int) position.x, (int) position.y, (int) topArrowShaft.x, (int) topArrowShaft.y);
+        g.drawLine((int) position.x, (int) position.y, (int) bottomArrowShaft.x, (int) bottomArrowShaft.y);
         // restore the saved transformation
         g.setTransform(tmp);
     }
 
     @Override
-    public boolean isInBound(Vector start, double w, double h) {
-        return position.x <= start.x + w && position.y <= start.y + h && position.x >= start.x && position.y >= start.y;
+    public boolean isInBound(Rect bounds) {
+        return position.x <= bounds.getTopLeft().x + bounds.getWidth() &&
+                position.y <= bounds.getTopLeft().y + bounds.getHeight() &&
+                position.x >= bounds.getTopLeft().x &&
+                position.y >= bounds.getTopLeft().y;
     }
 
     public Vector getPosition() {
