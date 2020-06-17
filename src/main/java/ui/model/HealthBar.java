@@ -55,7 +55,7 @@ public class HealthBar implements DrawableModel {
     public void render(Graphics2D g) {
         Paint old_paint = g.getPaint();
 
-        String healthString = String.valueOf((int) currentHealth);
+        String healthString = String.valueOf((int) Math.ceil(currentHealth));
         FontMetrics metrics = g.getFontMetrics();
         int stringWidth = metrics.stringWidth(healthString);
 
