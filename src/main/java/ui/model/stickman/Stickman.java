@@ -115,4 +115,8 @@ public class Stickman implements DrawableModel {
     public Vector getGroundPosition() {
         return groundPosition;
     }
+
+    public double getHeight() {
+        return bodyHeight;
+    }
 }

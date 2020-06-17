@@ -2,6 +2,7 @@ package ui;
 
 import ui.model.*;
 import ui.model.stickman.Arm;
+import utils.Helpers;
 import utils.Vector;
 
 import javax.swing.*;
@@ -11,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
+
+    private final static double MIN_HEALTH_LOSS = 2;
+    private final static double MAX_HEALTH_LOSS = 40;
 
     private long fps = 0;
     private Vector mouseStart = new Vector();
@@ -79,7 +83,15 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 HealthBar bar = (shot.isTargetPlayer1) ? p1Health : p2Health;
 
                 if (bar != null) {
-                    bar.decreaseHealth(10);
+                    Archer archer = (shot.isTargetPlayer1) ? p1: p2;
+
+                    double offsetFromGround = Math.abs(shot.arrow.getPosition().y - p1.getGroundPosition().y);
+                    double archerHeight = archer.getHeight();
+
+                    // health would range from 2 to 40
+                    double healthShouldLose = Helpers.map(offsetFromGround, 0, archerHeight, MIN_HEALTH_LOSS, MAX_HEALTH_LOSS);
+
+                    bar.decreaseHealth(healthShouldLose);
 
                     if (bar.getHealth() == 0) {
                         gameOver = true;
