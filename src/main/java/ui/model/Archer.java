@@ -24,8 +24,8 @@ public class Archer extends Stickman {
         resetBowAndArrow();
     }
 
-    public void draw(Vector power) {
-        bowAndArrow.setDirectionNormalized(power);
+    public void draw(Vector direction) {
+        bowAndArrow.setDirectionNormalized(direction);
     }
 
     public void resetBowAndArrow() {
@@ -46,7 +46,16 @@ public class Archer extends Stickman {
 
         if (bowAndArrow != null) {
             bowAndArrow.update(delta);
-            bowAndArrow.setStartPosition(wist.add(new Vector(headRadius, 0).scale((flipped) ? -1 : 1)));
+
+            Vector torso = shoulderCenter.sub(wist).scale(getPowerPercentage());
+            Vector start = wist.add(torso);
+            start = start.add(new Vector(headRadius, 0).scale((flipped) ? -1 : 1));
+
+            // use the power percentage to know how long should the arm stretch
+            double newMag = rightArm.getLength() / 2 * getPowerPercentage();
+
+
+            bowAndArrow.setStartPosition(start.add(bowAndArrow.getDirection().remagnitude(newMag)));
 
             setRightHandPosition(bowAndArrow.getBowEndPosition());
             setLeftHandPosition(bowAndArrow.getYarnEndPosition());

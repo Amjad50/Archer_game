@@ -43,4 +43,8 @@ public class ArmLegSegment {
     public void updateEnd() {
         end = start.add(new Vector(Math.cos(angle), Math.sin(angle)).scale(length));
     }
+
+    public double getLength() {
+        return length;
+    }
 }

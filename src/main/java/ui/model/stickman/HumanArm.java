@@ -47,5 +47,4 @@ public class HumanArm extends Arm {
             // FIXME: implement a way to correct the hand's angle
         }
     }
-
 }

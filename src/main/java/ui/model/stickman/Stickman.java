@@ -26,9 +26,9 @@ public class Stickman implements DrawableModel {
     protected Vector wist = new Vector();
     private Vector leftLeg = new Vector();
     private Vector rightLeg = new Vector();
-    private Vector shoulderCenter = new Vector();
+    protected Vector shoulderCenter = new Vector();
     private HumanArm leftArm;
-    private HumanArm rightArm;
+    protected HumanArm rightArm;
 
 
     public Stickman(double height) {

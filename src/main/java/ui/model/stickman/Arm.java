@@ -41,6 +41,14 @@ public class Arm implements DrawableModel {
         this.base = base.copy();
     }
 
+    public double getLength() {
+        double result = 0;
+
+        for(ArmLegSegment segment: segments)
+            result += segment.getLength();
+        return result;
+    }
+
     @Override
     public void update(double delta) {
     }
