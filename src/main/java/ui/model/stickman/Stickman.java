@@ -72,7 +72,10 @@ public class Stickman implements DrawableModel {
         g.drawLine((int) rightLeg.x, (int) rightLeg.y, (int) wist.x, (int) wist.y);
         g.drawLine((int) leftLeg.x, (int) leftLeg.y, (int) wist.x, (int) wist.y);
 
-        g.drawLine((int) wist.x, (int) wist.y, (int) shoulderCenter.x, (int) shoulderCenter.y);
+//        g.drawLine((int) wist.x, (int) wist.y, (int) shoulderCenter.x, (int) shoulderCenter.y);
+
+        g.fillOval((int) (shoulderCenter.x - bodyWidth / 2), (int) (shoulderCenter.y), (int) bodyWidth, (int) shoulderCenter.sub(wist).magnitude());
+
         g.drawOval((int) (shoulderCenter.x - headRadius), (int) (shoulderCenter.y - headRadius * 2),
                 (int) headRadius * 2, (int) headRadius * 2);
 
