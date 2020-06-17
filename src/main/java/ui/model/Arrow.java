@@ -7,12 +7,16 @@ import java.awt.geom.AffineTransform;
 
 public class Arrow implements DrawableModel {
 
-    private static final double ARROW_SHAFT_LENGTH = 20;
+    private static final double ARROW_SHAFT_LENGTH = 10;
 
     private Vector acceleration = new Vector();
     private Vector velocity = new Vector();
     private Vector position = new Vector();
+    private Vector topArrowShaft;
+    private Vector bottomArrowShaft;
     private double length;
+
+    private boolean use_update_method = false;
 
     public Arrow(double length) {
         this.length = length;
@@ -20,10 +24,6 @@ public class Arrow implements DrawableModel {
 
     public void setVelocity(Vector v) {
         velocity = v;
-    }
-
-    public void setPosition(Vector v) {
-        position = v;
     }
 
     public void setAcceleration(Vector v) {
@@ -38,13 +38,21 @@ public class Arrow implements DrawableModel {
     public void update(double delta) {
         velocity = velocity.add(acceleration.scale(delta));
         position = position.add(velocity.scale(delta));
+
+        update_arrow_shaft();
+        use_update_method = true;
+    }
+
+    private void update_arrow_shaft() {
+        Vector arrowShaft = new Vector(-1, 1).remagnitude(ARROW_SHAFT_LENGTH);
+        topArrowShaft = position.add(arrowShaft);
+        bottomArrowShaft = position.add(arrowShaft.flipY());
     }
 
     @Override
     public void render(Graphics2D g) {
-        Vector arrowShaft = new Vector(-1, 1).remagnitude(ARROW_SHAFT_LENGTH);
-        Vector topArrowShaft = position.add(arrowShaft);
-        Vector bottomArrowShaft = position.add(arrowShaft.flipY());
+        if (!use_update_method)
+            update_arrow_shaft();
         // save the transformation to be restored later
         AffineTransform tmp = g.getTransform();
         // rotate the canvas around the tail of the arrow
@@ -67,5 +75,9 @@ public class Arrow implements DrawableModel {
 
     public Vector getPosition() {
         return position;
+    }
+
+    public void setPosition(Vector v) {
+        position = v;
     }
 }
