@@ -4,6 +4,7 @@ import utils.Vector;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -11,9 +12,10 @@ public class Blood implements DrawableModel {
 
     private Vector gravity = new Vector();
     private ArrayList<Ball> bloodBalls = new ArrayList<>();
-    private double groundHeight;
+    private Vector position;
 
     public Blood(Vector position) {
+        this.position = position.copy();
         Random r = new Random();
         for (int i = 0; i < 10; i++) {
             Ball ball = new Ball(10 + r.nextInt(10));
@@ -37,6 +39,14 @@ public class Blood implements DrawableModel {
 
             ball.update(delta);
         }
+
+        Random r = new Random();
+        if(r.nextInt(300) == 0) {
+            ball = new Ball(10 + r.nextInt(10));
+            ball.setPosition(position.copy());
+            ball.setVelocity(new Vector(r.nextInt(2), r.nextInt(2)));
+            bloodBalls.add(ball);
+        }
     }
 
     @Override
@@ -44,8 +54,12 @@ public class Blood implements DrawableModel {
         Paint old_paint = g.getPaint();
 
         g.setPaint(Color.RED);
-        for (Ball ball : bloodBalls) {
-            ball.render(g);
+        try {
+            for (Ball ball : bloodBalls) {
+                ball.render(g);
+            }
+        }catch (ConcurrentModificationException e) {
+            // FIXME: this is due to running two threads, one for render and one for update
         }
 
         g.setPaint(old_paint);
@@ -59,9 +73,5 @@ public class Blood implements DrawableModel {
 
     public void setGravity(Vector gravity) {
         this.gravity = gravity;
-    }
-
-    public void setGroundHeight(double groundHeight) {
-        this.groundHeight = groundHeight;
     }
 }

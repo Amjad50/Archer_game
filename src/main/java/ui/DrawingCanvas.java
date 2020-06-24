@@ -80,7 +80,6 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             } else if (shot.hit) {
                 if (shot.arrow.isInBound(shot.target)) {
                     blood = new Blood(shot.arrow.getPosition());
-                    blood.setGroundHeight(getHeight() - groundHeight);
                     blood.setGravity(new Vector(0, 9.8).scale(0.02));
 
                     HealthBar bar = (shot.isTargetPlayer1) ? p1Health : p2Health;
