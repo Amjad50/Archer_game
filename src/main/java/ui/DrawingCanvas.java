@@ -23,6 +23,8 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
     private boolean dragging = false;
     private boolean gameOver = false;
 
+    private boolean goback = false;
+
     // true p1, false p2
     private boolean playerSelector = true;
 
@@ -75,30 +77,32 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             ) {
                 shot.arrow.update(delta);
                 last = shot.arrow;
-            } else if (shot.bleed && shot.arrow.isInBound(shot.target)) {
-                blood = new Blood(shot.arrow.getPosition());
-                blood.setGroundHeight(getHeight() - groundHeight);
-                blood.setGravity(new Vector(0, 9.8).scale(0.02));
+            } else if (shot.hit) {
+                if (shot.arrow.isInBound(shot.target)) {
+                    blood = new Blood(shot.arrow.getPosition());
+                    blood.setGroundHeight(getHeight() - groundHeight);
+                    blood.setGravity(new Vector(0, 9.8).scale(0.02));
 
-                HealthBar bar = (shot.isTargetPlayer1) ? p1Health : p2Health;
+                    HealthBar bar = (shot.isTargetPlayer1) ? p1Health : p2Health;
 
-                if (bar != null) {
-                    Archer archer = (shot.isTargetPlayer1) ? p1: p2;
+                    if (bar != null) {
+                        Archer archer = (shot.isTargetPlayer1) ? p1 : p2;
 
-                    double offsetFromGround = Math.abs(shot.arrow.getPosition().y - p1.getGroundPosition().y);
-                    double archerHeight = archer.getHeight();
+                        double offsetFromGround = Math.abs(shot.arrow.getPosition().y - p1.getGroundPosition().y);
+                        double archerHeight = archer.getHeight();
 
-                    // health would range from 2 to 40
-                    double healthShouldLose = Helpers.map(offsetFromGround, 0, archerHeight, MIN_HEALTH_LOSS, MAX_HEALTH_LOSS);
+                        // health would range from 2 to 40
+                        double healthShouldLose = Helpers.map(offsetFromGround, 0, archerHeight, MIN_HEALTH_LOSS, MAX_HEALTH_LOSS);
 
-                    bar.decreaseHealth(healthShouldLose);
+                        bar.decreaseHealth(healthShouldLose);
 
-                    if (bar.getHealth() == 0) {
-                        gameOver = true;
+                        if (bar.getHealth() == 0) {
+                            gameOver = true;
+                        }
                     }
                 }
-
-                shot.bleed = false;
+                shot.hit = false;
+                goback = true;
             }
         }
 
@@ -113,6 +117,22 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             // the ground should not move up
             if (offset.y < 0)
                 offset.y = 0;
+        } else {
+            if (goback) {
+                Archer archer = playerSelector ? p1 : p2;
+                double distance_from_archer = (-offset.x + getWidth() /2. - archer.getGroundPosition().x );
+                double amount;
+
+                if (distance_from_archer > 0)
+                    amount = 2;
+                else
+                    amount = -2;
+
+                offset.x += amount;
+
+                if (Math.abs(distance_from_archer) < 20)
+                    goback = false;
+            }
         }
 
         if (arm != null) {
@@ -155,6 +175,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
                 }
             }
         }
+
     }
 
     @Override

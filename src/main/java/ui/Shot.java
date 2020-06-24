@@ -7,7 +7,7 @@ public class Shot {
     public Arrow arrow;
     public Rect target;
     public boolean isTargetPlayer1;
-    public boolean bleed = true;
+    public boolean hit = true;
 
     public Shot(Arrow arrow, Rect target, boolean isTargetPlayer1) {
         this.arrow = arrow;
