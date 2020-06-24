@@ -19,7 +19,7 @@ public class BowAndArrow implements DrawableModel {
     }
 
     public BowAndArrow(double arrowLength, double bowHeight) {
-        arrow = new Arrow(arrowLength);
+        arrow = new StaticArrow(arrowLength);
         bow = new Bow(bowHeight);
         bow.setMaxWholeWidth(arrowLength - 20);
     }

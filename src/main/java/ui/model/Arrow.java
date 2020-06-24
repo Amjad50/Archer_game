@@ -9,14 +9,12 @@ public class Arrow implements DrawableModel {
 
     private static final double ARROW_SHAFT_LENGTH = 10;
 
-    private Vector acceleration = new Vector();
-    private Vector velocity = new Vector();
-    private Vector position = new Vector();
-    private Vector topArrowShaft;
-    private Vector bottomArrowShaft;
+    protected Vector acceleration = new Vector();
+    protected Vector velocity = new Vector();
+    protected Vector position = new Vector();
+    private Vector topArrowShaft = new Vector();
+    private Vector bottomArrowShaft = new Vector();
     private double length;
-
-    private boolean use_update_method = false;
 
     public Arrow(double length) {
         this.length = length;
@@ -40,10 +38,9 @@ public class Arrow implements DrawableModel {
         position = position.add(velocity.scale(delta));
 
         update_arrow_shaft();
-        use_update_method = true;
     }
 
-    private void update_arrow_shaft() {
+    protected void update_arrow_shaft() {
         Vector arrowShaft = new Vector(-1, 1).remagnitude(ARROW_SHAFT_LENGTH);
         topArrowShaft = position.add(arrowShaft);
         bottomArrowShaft = position.add(arrowShaft.flipY());
@@ -51,8 +48,6 @@ public class Arrow implements DrawableModel {
 
     @Override
     public void render(Graphics2D g) {
-        if (!use_update_method)
-            update_arrow_shaft();
         // save the transformation to be restored later
         AffineTransform tmp = g.getTransform();
         // rotate the canvas around the tail of the arrow
