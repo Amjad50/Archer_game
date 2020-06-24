@@ -2,7 +2,9 @@ package ui;
 
 import ui.model.*;
 import ui.model.stickman.Arm;
+import utils.Constants;
 import utils.Helpers;
+import utils.Measurement;
 import utils.Vector;
 
 import javax.swing.*;
@@ -52,6 +54,11 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
         p2 = new Archer(200, true);
     }
 
+    private Vector getGravity() {
+        // this would update UPDATE_PS times per second, so we scale the gravity to match that.
+        return Measurement.meter_to_pixel(new Vector(0, 9.8).scale(1. / Constants.UPDATE_PS));
+    }
+
     public void update(double delta, long fps) {
         this.fps = fps;
         update(delta);
@@ -80,7 +87,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
             } else if (shot.hit) {
                 if (shot.arrow.isInBound(shot.target)) {
                     blood = new Blood(shot.arrow.getPosition());
-                    blood.setGravity(new Vector(0, 9.8).scale(0.02));
+                    blood.setGravity(getGravity().scale(0.1));
 
                     HealthBar bar = (shot.isTargetPlayer1) ? p1Health : p2Health;
 
@@ -340,7 +347,7 @@ public class DrawingCanvas extends JPanel implements MouseListener, MouseMotionL
 
             if (archer != null && target != null) {
                 Arrow arrow = archer.releaseArrow();
-                arrow.setAcceleration(new Vector(0, 9.8).scale(0.1));
+                arrow.setAcceleration(getGravity().scale(0.1));
 
                 shots.add(new Shot(arrow, target, playerSelector));
 

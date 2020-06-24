@@ -4,10 +4,10 @@ import javax.swing.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainApplication extends JFrame {
+import static utils.Constants.FPS;
+import static utils.Constants.UPDATE_PS;
 
-    private static final int FPS = 250;
-    private static final int FPS_60 = 60;
+public class MainApplication extends JFrame {
 
     DrawingCanvas canvas;
     TimerTask task;
@@ -35,7 +35,7 @@ public class MainApplication extends JFrame {
             public void run() {
                 long now = System.nanoTime();
                 long fps = 1000_000_000 / (now - past);
-                double delta = (now - past) / 1E9 * FPS_60;
+                double delta = (now - past) / 1E9 * UPDATE_PS;
                 canvas.update(delta, fps);
                 SwingUtilities.invokeLater(canvas::render);
                 past = now;
