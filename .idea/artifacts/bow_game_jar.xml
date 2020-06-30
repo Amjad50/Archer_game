@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact name="bow_game:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/bow_game_jar</output-path>
+    <root id="root">
+      <element id="archive" name="bow_game.jar">
+        <element id="module-output" name="bow_game.main" />
+      </element>
+    </root>
+  </artifact>
+</component>
